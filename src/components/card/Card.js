@@ -1,0 +1,1 @@
+// This file defines how to interact with cards in any game, as well as what a card looks like.
