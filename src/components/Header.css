@@ -1,0 +1,23 @@
+.header-nav-logout {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0 2em;
+}
+
+.logoutBtn-container {
+    /* border: 2px black solid; */
+    align-self: center;
+}
+
+.header-title {
+    letter-spacing: 50px;
+    width: fit-content;
+    margin-right: auto;
+}
+
+.logout-btn {
+    margin-left: 1em;
+    align-self: flex-end;
+    padding: 10px 5px;
+    width: max-content;
+}

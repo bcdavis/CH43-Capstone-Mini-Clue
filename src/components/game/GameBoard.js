@@ -5,6 +5,17 @@
 import React from "react"
 
 export const GameBoard = () => {
+
+    // If the params in the url include '/play/:customGameId(\d+)',
+    // load the settings of the custom game with that customGameId
+
+    // If no id is given, the user is playing a classic game
+
+
+
+
+
+
     return (
         <h1 className="gameboard-title">THIS IS THE GAME BOARD</h1>
     )

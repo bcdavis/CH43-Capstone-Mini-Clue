@@ -5,15 +5,8 @@ import { useHistory } from 'react-router-dom'
 export const Register = (props) => {
     const history = useHistory()
     const userName = useRef()
-    const email = useRef()
-    
-    // const firstName = useRef()
-    // const lastName = useRef()
-    // const email = useRef()
-    // const password = useRef()
-    // const verifyPassword = useRef()
+    const email = useRef()  
     const emailDialog = useRef()
-    // const zipcode = useRef()
 
     // get user by email if they have one... so, 
     const existingUserCheck = () => {
@@ -32,6 +25,7 @@ export const Register = (props) => {
             console.log(email.current.value);
             existingUserCheck()
                 .then(() => {
+                    // Add new user to database
                     fetch("http://localhost:8088/users", {
                         method: "POST",
                         headers: {
@@ -39,7 +33,8 @@ export const Register = (props) => {
                         },
                         body: JSON.stringify({
                             email: email.current.value,
-                            username: `${userName.current.value}`
+                            username: `${userName.current.value}`,
+                            myCustomGames: 0
                         })
                     })
                         .then(_ => _.json())

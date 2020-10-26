@@ -1,9 +1,12 @@
 import React from "react"
+//import {Button} from "reactstrap"
 import { Route, Redirect } from "react-router-dom"
 import { ApplicationViews } from "./ApplicationViews"
-import { NavBar } from "./nav/NavBar"
+//import { NavBar } from "./nav/NavBar"
 import { Login } from "./auth/Login"
 import { Register } from "./auth/Register"
+import { Header } from "./Header"
+import "./Header.css"
 
 
 export const MainApp = () => (
@@ -12,7 +15,9 @@ export const MainApp = () => (
             if (sessionStorage.getItem("activeUser")) {
                 return (
                     <>
-                        <NavBar />
+                        <div className="header-nav-logout">
+                            <Header />
+                        </div>
                         <ApplicationViews />  
                     </>
                 )
@@ -22,10 +27,10 @@ export const MainApp = () => (
         }} />
 
         <Route path="/login">
-			<Login />
+            <Login />
         </Route>
         <Route path="/register">
-			<Register />
+            <Register />
         </Route>
     </>
 )

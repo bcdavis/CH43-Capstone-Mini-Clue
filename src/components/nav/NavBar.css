@@ -1,0 +1,22 @@
+.navbar {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0;
+    /* border: red solid 2px; */
+    list-style-type: none;
+    min-width: fit-content;
+}
+
+.navbar__item {
+    /* border: black 2px solid; */
+    list-style-type: none;
+    min-width: fit-content;
+    text-align: center;
+    padding: 10px 10px;
+    
+} 
+
+.navbar__link {
+    text-decoration: none;
+    color: rgb(242, 242, 242);
+}

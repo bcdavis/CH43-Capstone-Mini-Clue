@@ -12,7 +12,6 @@ export const PlayClassicGame = () => {
         history.push("/play")
     }
 
-
     return (
         <>
             <h1 className="classicGame-home--title">Classic</h1>

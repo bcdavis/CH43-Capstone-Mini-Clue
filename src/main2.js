@@ -106,7 +106,7 @@ var accusablePeople = [];   // all characters are accusable. \
 var accusableWeapons = [];  // all Weapons are accusable.     } If item is disproved, it is removed from array
 var accusableRooms = [];    // all Rooms are accusable.      /
 
-clear();
+//clear();
 
 var numPlayers = prompt("How many people are playing? (2 - 6)", "2");   // default to two players if user just presses enters
                                                                         // 4-5 Players are reccomended. 
@@ -207,7 +207,7 @@ for(var q = 0; q < allRooms.length; q++){
 function CreatePlayers(numPlayers){ 
     var temp = "Player";
     for(var i= 0; i < numPlayers; i++){
-        player = {
+        let player = {
             name: temp + String(i+1),   // generate general names for all players (Player1, Player2, etc.)
             cards: [],                  // keep track of cards dealt to each player
             win: 0                      // if a player accuses correctly, their win tag becomes 1 and the game ends.
@@ -564,7 +564,7 @@ function getScore(completionTime){
 
 function play(playerList){
     var t0 = performance.now();
-    while(gameOver == false){
+    while(gameOver === false){
         console.log("Make a new accusation...");
         console.log("Accuser's hand: " + playerList[0].cards); // show accuser their hand to help with accusing
         accusationResult = makeAccusation(playerList); // returns correct accuseArray or [0,0,0].
@@ -587,7 +587,7 @@ function play(playerList){
     console.log("Game Over. " + playerList[0].name + " solved the case in " + (tTotalSeconds/60).toFixed(2) + " minutes ("+ tTotalSeconds.toFixed(2) +" seconds)!");
     winnerScore = getScore(tTotalSeconds);
     game.score = String(winnerScore) + " points";                           // add score to game data
-    game; // should display game info at the end of each game
+    //game; // should display game info at the end of each game
 
     console.log("Last Game Stats:");
     console.log(game); // will definitely display game info 
