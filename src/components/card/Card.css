@@ -1,0 +1,30 @@
+.cardContainer {
+    border: solid dimgray 2px;
+    margin: 5px;
+    width: 10em;
+    margin: 0.25em auto;
+}
+
+.card-title{
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.accuse-button{
+    display: block;
+    margin: 0.5em auto 0 auto;
+    width: 80%;
+}
+
+.cardType--character{
+    background-color: rgb(187, 115, 111);
+}
+
+.cardType--weapon{
+    background-color: rgb(225, 186, 102);
+}
+
+.cardType--room{
+    background-color: rgb(161, 155, 203);
+}

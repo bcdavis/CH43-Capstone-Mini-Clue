@@ -8,6 +8,7 @@ import { GameBoard } from "./game/GameBoard.js"
 import { CustomGameCreator } from "./customGame/CustomGameCreator.js"
 import { CustomGameProvider } from "./customGame/CustomGameProvider.js"
 import { CardProvider } from "./card/CardProvider.js"
+import { ClassicGameResultsProvider } from "./game/ClassicGameProvider.js"
 
 import { ProfileProvider } from "./profile/ProfileProvider.js"
 
@@ -20,18 +21,19 @@ export const ApplicationViews = (props) => {
             </Route>
             
             <CardProvider>
-                <Route exact path="/play">
-                    <GameBoard />
-                </Route>
-
-
                 <CustomGameProvider>
+                    <ClassicGameResultsProvider>
+                        <Route exact path="/play">
+                            <GameBoard />
+                        </Route>
+
+                        <Route exact path="/play/:customGameId(\d+)">
+                            <GameBoard />
+                        </Route>
+                    </ClassicGameResultsProvider>
+
                     <Route exact path="/createCustom">
                         <CustomGameCreator />
-                    </Route>
-
-                    <Route exact path="/play/:customGameId(\d+)">
-                        <GameBoard />
                     </Route>
                 </CustomGameProvider>
             </CardProvider>
@@ -46,13 +48,6 @@ export const ApplicationViews = (props) => {
                     <MyProfile key={activeUserId}/>
                 </Route>
             </ProfileProvider>
-
-
-
-
-            {/* <Route exact path="/logout">
-                <Header />
-            </Route> */}
 
 
         </>

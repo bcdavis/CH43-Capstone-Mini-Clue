@@ -1,0 +1,24 @@
+
+
+
+.cardList{
+    background-color: lightGrey;
+    padding: 5px 2px;
+    flex: 1 0 30%;
+}
+
+.cardList > h3 {
+    color: black;
+    text-align: center;
+    font-weight: lighter;
+    font-size: 30px;
+    margin: 0;
+    padding: 0.5em 0;
+}
+
+.gameboard-cardList{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+}
