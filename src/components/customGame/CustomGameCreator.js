@@ -1,8 +1,8 @@
 // This file describes how the Custom Game Creator page looks and functions
 
-import React, { useRef, useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap"
+import { Button, Form, FormGroup, Label, Input } from "reactstrap"
 import { CustomGameContext } from "./CustomGameProvider.js"
 import { CardContext } from "../card/CardProvider.js"
 
@@ -10,23 +10,26 @@ export const CustomGameCreator = (props) => {
 
     // --------------- Initializing Variables ----------------
 
-    const { 
-        currentUser, 
-        addCustomGame, 
-        getCustomGames, 
-        getCustomGamesByUserId, 
-        getCurrentUser, 
-        updateCurrentUser, 
-        getCustomGameById, 
-        getCustomGameByNameAndUserId 
-    } = useContext(CustomGameContext);
+    const { addCustomGame, getCustomGames } = useContext(CustomGameContext);
     const { addCard, getCards } = useContext(CardContext);
     const activeUserId = parseInt(sessionStorage.getItem("activeUser"));
 
     const [currentCustomGame, setCurrentCustomGame] = useState({});
     const [customCards, setCustomCards] = useState({});
+    // customCards is an object with three attributes:
+    /**
+     * - charsInputText -- records the input string from the characters textarea
+     * - weaponsInputText -- records the input string from the weapons textarea
+     * - roomsInputText -- records the input string from the rooms textarea
+     */
 
-    let unusedCards = 30; // The maximum number of cards a user can add
+    // initialize empy arrays for the storage of card inputs
+    //const [storedCharInputs, setStoredCharInputs] = useState({});
+    //const [storedWeaponInputs, setStoredWeaponInputs] = useState([]);
+    //const [storedRoomInputs, setStoredRoomInputs] = useState([]);
+    //const [currentUser, setCurrentUser] = useState({})
+
+    //let unusedCards = 30; // The maximum number of cards a user can add
     // -- decreases each time the user:  
     // ---- saves and parses the input of a textarea
     // ---- (STRETCH: adds a card or list of cards)
@@ -34,10 +37,10 @@ export const CustomGameCreator = (props) => {
 
     //const gameNameInput = useRef(null);
     //const charInputs = useRef(null);
-    const weaponInputs = useRef(null);
-    const roomInputs = useRef(null);
+    //const weaponInputs = useRef(null);
+    //const roomInputs = useRef(null);
     // initialize and reset captured custom card inputs
-    let storedCharInputs, storedWeaponInputs, storedRoomInputs = [];  
+    let storedCharInputs1, storedWeaponInputs1, storedRoomInputs1 = [];  
 
 
     // Handle the form inputs
@@ -55,14 +58,58 @@ export const CustomGameCreator = (props) => {
     const handleControlledCardInputChange = (event) => {
         //When changing a state object or array, 
         //always create a copy make changes, and then set state.
-        const newCard = { ...customCards }
+        const newInputs = { ...customCards }
+        console.log("newInputs = { ...customCards }: ", newInputs);
         //article is an object with properties. 
         //set the property to the new value
-        newCard[event.target.name] = event.target.value
+        newInputs[event.target.name] = event.target.value
+        console.log("newInputs: ", newInputs);
         //update state
-        setCustomCards(newCard)
+        setCustomCards(newInputs)
     }
 
+
+
+    /*
+    const handleControlledCharCardInputChange = (event) => {
+        //When changing a state object or array, 
+        //always create a copy make changes, and then set state.
+        const newInputs = { ...storedCharInputs }
+        console.log("newCharInputs = { ...storedCharInputs }: ", newInputs);
+        //article is an object with properties. 
+        //set the property to the new value
+        newInputs[event.target.name] = event.target.value
+        console.log("newCharInputs: ", newInputs);
+        //update state
+        setStoredCharInputs(newInputs)
+    }
+    
+    const handleControlledWeaponCardInputChange = (event) => {
+        //When changing a state object or array, 
+        //always create a copy make changes, and then set state.
+        const newInputs = { ...storedWeaponInputs }
+        console.log("newInputs = { ...storedWeaponInputs }: ", newInputs);
+        //article is an object with properties. 
+        //set the property to the new value
+        newInputs[event.target.name] = event.target.value
+        console.log("newWeaponInputs: ", newInputs);
+        //update state
+        setStoredWeaponInputs(newInputs)
+    }
+
+    const handleControlledRoomCardInputChange = (event) => {
+        //When changing a state object or array, 
+        //always create a copy make changes, and then set state.
+        const newInputs = { ...storedRoomInputs }
+        console.log("newInputs = { ...storedRoomInputs }: ", newInputs);
+        //article is an object with properties. 
+        //set the property to the new value
+        newInputs[event.target.name] = event.target.value
+        console.log("newRoomInputs: ", newInputs);
+        //update state
+        setStoredRoomInputs(newInputs)
+    }
+*/
     
 
 
@@ -78,6 +125,7 @@ export const CustomGameCreator = (props) => {
     // These functions parse input strings to capture the cards the user adds in the form
     // Checks if the number of input items exceeds the possible maximum
     const parseInputCards = (inputString) => {
+        console.log("-------------------------\n - parseInputCards()")
         let newInputs = [];                         // initialize empty local array to store parsed input string
         if(inputString !== ''){                     // Check if anything was actually typed
             newInputs = inputString.split(',');     // If stuff typed, fill array split by commas
@@ -96,48 +144,90 @@ export const CustomGameCreator = (props) => {
     }
 
     const storeCharInputs = () => {
-        // save parsed cards in global variable
-        console.log("inputLogger --- storeCharInputs(): ");
-        inputLogger();
-        storedCharInputs = parseInputCards(customCards.charsInputText.trim()); 
+        console.log("-------------------------\n - storeCharInputs()")
+        // save parsed cards in state variable
+        storedCharInputs1 = parseInputCards(customCards.charsInputText.trim());
+        // console.log("storedCharInputs1: ", storedCharInputs1);
+        // console.log("customCards: ", customCards);
+
     }
 
     const storeWeaponInputs = () => {
-        console.log("inputLogger --- storeWeaponInputs(): ");
-        inputLogger();
-        // save parsed cards in global variable
-        storedWeaponInputs = parseInputCards(customCards.weaponsInputText.trim());
+        console.log("-------------------------\n - storeWeaponInputs()")
+        // save parsed cards in state variable
+        storedWeaponInputs1 = parseInputCards(customCards.weaponsInputText.trim());
+        // console.log("storedWeaponInputs1: ", storedWeaponInputs1);
+        // console.log("storedWeaponInputs: ", customCards);
     }
 
     const storeRoomInputs = () => {
-        console.log("inputLogger --- storeRoomInputs(): ");
-        inputLogger();
-        // save parsed cards in global variable
-        storedRoomInputs = parseInputCards(customCards.roomsInputText.trim());
+        console.log("-------------------------\n - storeRoomInputs()")
+        // save parsed cards in state variable
+        storedRoomInputs1 = parseInputCards(customCards.roomsInputText.trim());
+        // console.log("storedRoomInputs1: ", storedRoomInputs1);
+        // console.log("storedRoomInputs: ", customCards);
     }
+
 
 
     // This function saves the inputs to the database as individual cards with the corresponding customGameId
     const saveInputCards = (newCustomGameId) => {
-        console.log("storedCharInputs: ", storedCharInputs);
-        const charCards = storedCharInputs.map(c => {
+        console.log("-------------------------\n - saveInputCards()")
+        // console.log("currentCustomGame: ", currentCustomGame);
+        console.log("saveInputCards() --> newCustomGameId: ", newCustomGameId);
+
+        //customCards.charsInputText = storedCharInputs1;
+        //customCards.weaponsInputText = storedWeaponInputs1;
+        //customCards.roomsInputText = storedRoomInputs1;
+
+        console.log("customCards: ", customCards);
+
+        console.log("storedCharInputs1: ", storedCharInputs1);
+        console.log("storedWeaponInputs1: ", storedWeaponInputs1);
+        console.log("storedRoomInputs1: ", storedRoomInputs1);
+
+        const charCards = storedCharInputs1.map(c => {
             return createCustomCardObject(c, "character", newCustomGameId)
         })
         console.log("\ncharCards:\n", charCards);
 
-        const weaponCards = storedWeaponInputs.map(w => {
+        const weaponCards = storedWeaponInputs1.map(w => {
             return createCustomCardObject(w, "weapon", newCustomGameId)
         })
-        console.log("\nweaponCards:\n", charCards);
+        console.log("\nweaponCards:\n", weaponCards);
 
-        const roomCards = storedRoomInputs.map(r => {
+        const roomCards = storedRoomInputs1.map(r => {
             return createCustomCardObject(r, "room", newCustomGameId)
         })
+        console.log("\nroomCards:\n", roomCards);
 
         // concatenate chars array with weapons and rooms to make one array of card objects
         if(charCards.length !== 0 && weaponCards.length !== 0 && roomCards.length !== 0){
+            //console.log("\nAll card arrays are not empty ---- join them together\n");
             let allCustomCardObjs = charCards.concat(weaponCards, roomCards);
+            //console.log("\nallCustomCardObjs: ", allCustomCardObjs);
             // Iterate through and add each card to the database with the CORRECT gameId
+
+            // This bit of code was suggested online to allow more event listeners to operate at once
+            // so the json-server error: 
+
+            /* (node:38613) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 
+            11 uncaughtException listeners added to [process]. Use emitter.setMaxListeners() to increase limit
+            */ 
+
+            // doe not get thrown. The code temporarily adds more (at least one more) listeners to handle 
+            // extra listening. Adding a bunch of cusom game cards at once seems to make json-server
+            // think that there's a memory leak since so much information is getting added to the database...?
+
+/*
+            emitter.setMaxListeners(emitter.getMaxListeners() + 1);
+                emitter.once('event', () => {
+                // do stuff
+                emitter.setMaxListeners(Math.max(emitter.getMaxListeners() - 1, 0));
+            });
+*/
+
+
             for (const card of allCustomCardObjs) {
                 addCard(card);
             }
@@ -168,51 +258,24 @@ export const CustomGameCreator = (props) => {
 
 
 
-    const inputLogger = () => {
-
-        console.log("gameNameInput: ", currentCustomGame.gameName )
-        console.log("customCards.charsInputText: ", customCards.charsInputText )
-        console.log("weaponInputs: ", customCards.weaponsInputText )
-        console.log("roomInputs: ", customCards.roomsInputText )
-    }
+    // const inputLogger = () => {
+    //     console.log("   gameNameInput: ", currentCustomGame.gameName )
+    //     console.log("   customCards.charsInputText: ", customCards.charsInputText )
+    //     console.log("   weaponInputs: ", customCards.weaponsInputText )
+    //     console.log("   roomInputs: ", customCards.roomsInputText )
+    // }
 
 
     const createNewCustomGameObject = () => {
-        console.log("currentCustomGame.gameName: ", currentCustomGame.gameName);
+        console.log("-------------------------\n - createNewCustomGameObject()")
+        //console.log("currentCustomGame.gameName: ", currentCustomGame.gameName);
         const newObj = {
             userId: activeUserId,
             gameName: currentCustomGame.gameName,
             isPrivate: true
         }
-        console.log("newObj: ", newObj);
+        //console.log("newObj: ", newObj);
         return newObj
-
-    }
-
-    // This function updates the current user's number of created custom games
-    // once a new custom game is created.
-    const updateMyCustomGames = () => {
-        const myGames = getCustomGamesByUserId(activeUserId); // get array of games by the active user
-        console.log("myGames: ", myGames);
-        const activeUser = getCurrentUser();    // get the active user
-        console.log("activeUser: ", activeUser);
-        // compare activeUser's # of games to length of games corresponding to activeUser's Id
-        if(activeUser.myCustomGames !== myGames.length){ 
-            console.log(" MISMATCH ---- update myCustomGames ")
-            // If the two don't match, update activeUser's profile
-            updateCurrentUser({
-                name: activeUser.username,
-                myCustomGames: myGames.length, // update the number of custom games the user created
-                bestClassicGameId: activeUser.bestClassicGameId, 
-                bestClassicGameScore: activeUser.bestClassicGameScore,
-                email: activeUser.email
-
-            })
-        }
-        else {
-            console.log(" MATCH ------ apparently the user did not make a new game, but this function was still called...?");
-        }
-        
 
     }
 
@@ -221,26 +284,16 @@ export const CustomGameCreator = (props) => {
     // uploads the object to the database, 
     // and starts the game with the id of the object just created. 
     const navToPlayGame = () => {
-        inputLogger();
+        debugger;
+        console.log("-------------------------\n - navToPlayGame()")
+        //inputLogger();
         const newCustomGameObj = createNewCustomGameObject() // create local obj to reference for adding cards
         addCustomGame(newCustomGameObj) // add custom game obj to database
-        .then(() => {
-            // fetch that object to grab it's id
-            getCustomGameByNameAndUserId(newCustomGameObj.gameName, newCustomGameObj.userId)
-            .then(game => {
-                // set the grabbed game to the currentCustomGame in state
-                setCurrentCustomGame(game)
-            })
-        })
-        .then(() => {
+        .then(newGame => {
             // save and add new custom cards to new custom game id
-            saveInputCards(currentCustomGame.id)
-        })
-        .then(() => {
-            // update current user's myCustomGames information 
-            updateMyCustomGames()
+            saveInputCards(newGame.id);
             // navigate to the gameboard for the custom game just created
-            history.push(`/play/${currentCustomGame.id}`)
+            history.push(`/play/${newGame.id}`);
         })
     }
 

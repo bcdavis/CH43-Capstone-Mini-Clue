@@ -37,6 +37,7 @@ export const CustomGameProvider = (props) => {
     // CustomGames are added when the settings to a new custom game are saved
     // Cards associated with the custom game id are also saved
     const addCustomGame = customGameObj => {
+        console.log("customGameObj_to_add: ", customGameObj);
         return fetch("http://localhost:8088/customGames", {
             method: "POST",
             headers: {
@@ -52,19 +53,17 @@ export const CustomGameProvider = (props) => {
              *  isPrivate: 
              * }
              */
-
-
-
+            
              // When adding a custom game, the active user's myCustomGames counter should also be updated
         })
-            .then(getCustomGameByNameAndUserId(customGameObj.gameName, customGameObj.userId))
+            .then(res => res.json())
+            //.then(getCustomGameByNameAndUserId(customGameObj.gameName, customGameObj.userId))
     }
 
     // Grab a custom game that corresponds to a particular game Id (classic games have CustomGames with gameId = 0)
     const getCustomGameByGameId = (gameId) => {
-        return fetch(`http://localhost:8088/customGames?id=${gameId}`)
+        return fetch(`http://localhost:8088/customGames?id=${gameId}&_expand=user`)
             .then(res => res.json())
-            .then(setCustomGame)
     }
 
     // Fetch a custom game by the game's name and 

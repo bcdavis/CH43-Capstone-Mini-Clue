@@ -1,5 +1,5 @@
 import React from "react"
-import { Route } from "react-router-dom"
+import { Route, useParams } from "react-router-dom"
 import { Home } from "./home/Home.js"
 import { Header } from "./Header.js"
 import { MyProfile } from "./profile/MyProfile.js"
