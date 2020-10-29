@@ -349,7 +349,7 @@ function makeAccusation(playerlist){
     // This resembles the ability to accuse anything in your hand at any time to find out
     // the specific cards of other players. 
     for(var u = 0; u < 3; u++){
-        if(guilty.selfDisproved == true){
+        if(guilty.selfDisproved === true){
             break;
         }
         else{
@@ -367,7 +367,7 @@ function makeAccusation(playerlist){
     }   
     //var continue1 = prompt("continue to guilty.disproved == false while loop?  Y/N");   
     a = a + 1;                              // add 1 to a to start checking next player
-    while(guilty.disproved == false){       
+    while(guilty.disproved === false){       
         // loop needs to stop once all players have been checked or if  
         // accusation is disproven 
         if(a > numPlayers-1){ 
@@ -385,7 +385,7 @@ function makeAccusation(playerlist){
 
     // if the accuser can't disprove, and neither can the other players,
     // the accusation must be correct. 
-    if((guilty.selfDisproved == false && guilty.disproved == false)){
+    if((guilty.selfDisproved === false && guilty.disproved === false)){
         console.log("accusation not disproven by accuser or by other players.");
         return tryWin(accuseArray);
     }
@@ -422,67 +422,6 @@ function checkAccusation(accuseArr, player){
         return false;
     }
 };
-// possible improvements to make checkAccusation() more efficient -- 
-/*
-1. check for information in the largest accusable array first 
-(would probably start with rooms since that is the largest accusable array to start)
-    - if multiple arrays are the same length, check in predefined order (person -> weapon -> room)
-    - all arrays would decrease in size more uniformly 
-
-2. check a random accusable array first (1/3), remove availability after
-    - check a second random one (1/2), remove availability after
-    - check whichever array still remains available 
-        - availability might require accusable arrays to be stored in an accusable object or tuple ([[a],[b],[c]])
-        - calculating a random number two times and parsing such a structure might be more efficient though...
-
-2.5. alternately, could check in predetermined order (person -> weapon -> room), then 
-    - if multiple accused items could be disproved, randomly pick one to show the accuser
-    - but ONLY randomly if all items which could be disproved have not been disproven yet. 
-    ex. -- 
-    
-    Player1 accuses Mrs. White with the rope in the library...
-    // Player2 has Mr. Green, Prof. Plum, candlestick, and kitchen cards
-    > Player2 cannot disprove
-    // Player3 has Miss Scarlet, rope, library, and knife cards
-    > Player3 can disprove
-        // check accusableArrays for all accused items disprovable by Player3
-        // - if the number of disprovable items still in their respective accusableArrays > 1,
-        // - - then randomly pick one
-        // - else, disprovable items = 1, show whichever one is left
-    > Player3 shows accuser library card
-    ...
-    Player1 accuses Ms. Peacock with the rope in the library... 
-    // Player2 has Mr. Green, Prof. Plum, candlestick, and kitchen cards
-    > Player2 cannot disprove
-    // Player3 has Miss Scarlet, rope, library, and knife cards
-    > Player3 can disprove
-        // check accusableArrays for all accused items disprovable by Player3
-        // - if the number of disprovable items still in their respective accusableArrays > 1,
-        // - - then randomly pick one
-        // - else, disprovable items = 1, show whichever one is left
-    > Player3 shows accuser rope card
-
-    // ^ this would be a very beneficial style for the accuser. He/she could accuse the same thing 
-    // multiple times to see where all the cards were... very unlike the real game of Clue
-
-3. For added realism and bystander strategy, 
-    - any player who could disprove more than one accused item randomly picks one,
-    but if ever the item that player disproved before is accused again, the player will automatically show 
-    the card he/she disproved before, as to not let the accuser figure out what other cards
-    the player could have. 
-    - this tactic has a similar outcome to the predetermined checking order, but is more punishing of 
-    accidental accusations of items already disproved.
-
-    - to counter, the human behind the accuser should refrain from accusing something that has
-    already been disproved.
-    
-4. end-game speed checking
-    - When an accusableArray contains one item, the checkAccusation() function does not continue
-    to check hands for items in that array. This might speed up the checking process towards the 
-    end of the game when suspect items have been narrowed down enough to know that the single
-    item in an accusableArray cannot be disproved by any player. This indicates that the single item
-    must be one of the three cards of the culprit.  
-*/
 
 // check final accusation against contents of confidential folder
 function finish(result, player){
@@ -529,22 +468,22 @@ function getScore(completionTime){
     var lvl = "";
     var bonus = "";
     // "difficulty" setting bonus (based on number of players):
-    if(numPlayers == 2){
+    if(numPlayers === 2){
         lvl = "easy, two players";
         score -= score * 0.10; // easy -> subtract 10% 
         bonus = "-10%";
     }
-    else if(numPlayers == 4){
+    else if(numPlayers === 4){
         lvl = "advanced, four players";
         score += score * 0.10; // advanced -> add 5%
         bonus = "+10%";
     }
-    else if(numPlayers == 5){
+    else if(numPlayers === 5){
         lvl = "hard, five players";
         score += score * 0.25; // hard -> add 10%
         bonus = "+25%";
     }
-    else if(numPlayers == 6){
+    else if(numPlayers === 6){
         lvl = "expert, six players";
         score += score * 0.50; // very hard (expert) -> add 20%
         bonus = "+50%";
@@ -649,14 +588,14 @@ function resetVariables(){
 const replaceChars = () => {
     var counter = 0;
     var allCharPrompt = prompt("List at least five single-word names (proper nouns) separated by spaces or press enter to skip.");
-    if(allCharPrompt != ''){
+    if(allCharPrompt !== ''){
         allCharacters = allCharPrompt.split(' ');
     }
     // remove any accidental null or space entries
     allCharacters.forEach(function(element){
         //console.log("Element in allCharacters: "+element);
         //console.log("ASCII value of first character of element ("+element+"): "+element.charCodeAt(0));
-        if(element == ""){
+        if(element === ""){
             counter++;
         }
         if(element.charCodeAt(0) <= 47){
@@ -670,14 +609,14 @@ const replaceChars = () => {
 const replaceWepns = () => {
     var counter = 0;
     var allWepnPrompt = prompt("List at least five single-word weapons separated by spaces or press enter to skip.");
-    if(allWepnPrompt != ''){
+    if(allWepnPrompt !== ''){
         allWeapons = allWepnPrompt.split(' ');
     }
     // remove any accidental null or space entries
     allWeapons.forEach(function(element){
         //console.log("Element in allWeapons: "+element);
         //console.log("ASCII value of first character of element ("+element+"): "+element.charCodeAt(0));
-        if(element == ""){
+        if(element === ""){
             counter++;
         }
         if(element.charCodeAt(0) <= 47){
@@ -691,14 +630,14 @@ const replaceWepns = () => {
 const replaceRooms = () => {
     var counter = 0;
     var allRoomPrompt = prompt("List at least five single-word rooms separated by spaces or press enter to skip.");
-    if(allRoomPrompt != ''){
+    if(allRoomPrompt !== ''){
         allRooms = allRoomPrompt.split(' ');
     }
     // remove any accidental null or space entries
     allRooms.forEach(function(element){
         //console.log("Element in allRooms: "+element);
         //console.log("ASCII value of first character of element ("+element+"): "+element.charCodeAt(0));
-        if(element == ""){
+        if(element === ""){
             counter++;
         }
         if(element.charCodeAt(0) <= 47){
@@ -749,6 +688,7 @@ function checkGameItems(){
             case 2: 
                 title = "allRooms";
                 redo = replaceRooms;
+                break;
             default:
                 title = "Nothing is too short";
                 redo = null;
@@ -772,10 +712,10 @@ function checkGameItems(){
                 console.log(title + " has 3 or 4 items");
                 alert("Warning. "+title+" contains less than five elements.\nGame might not play correctly.");
                 p1 = prompt("Would you like to continue anyway or re-enter new items in "+title+"? (cont/re)","cont");
-                while((p1 != 'cont') && (p1 != 're')){
+                while((p1 !== 'cont') && (p1 !== 're')){
                     p1 = prompt("Invalid Response. Would you like to continue anyway or re-enter new items in "+title+"? (cont/re)","cont");
                 }
-                if(p1 == "re"){
+                if(p1 === "re"){
                     console.log("User decides to re-enter items"); 
                     brokeout = 1;
                     break;
@@ -791,7 +731,7 @@ function checkGameItems(){
         console.log("outside length < 5 if, "+title+" length >= 5");   
     }
     console.log("outside for loop, finished checking lengths or broke out"); 
-    if(brokeout == 1){
+    if(brokeout === 1){
         console.log("Definitely broke out of for loop...");
         console.log("title to redo: ", title);
         console.log("redo: ", redo);

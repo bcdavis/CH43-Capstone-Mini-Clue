@@ -8,6 +8,7 @@ import { CustomGameContext } from "../customGame/CustomGameProvider.js"
 import { CardContext } from "../card/CardProvider.js"
 import { CardHTML } from "../card/Card.js"
 import { ClassicGameResultsContext } from "./ClassicGameProvider.js"
+import { AccusationHTML } from "./functions/accusation.js"
 import "./Game.css"
 
 export const GameBoard = (props) => {
@@ -17,17 +18,28 @@ export const GameBoard = (props) => {
     //const { getBestResultsByUserId, updateBestResults} = useContext(ClassicGameResultsContext)
 
     const [currentGame, setCurrentGame] = useState({})
-    const [gameResults, setGameResults] = useState()
+    const [gameResults, setGameResults] = useState() // used to set the game results at the end of a game
 
+    /*
     const [ filteredCards, setFilteredCards] = useState({
         charCards: [],
         weaponCards: [],
         roomCards: []
     }); 
+    */
 
     const [charCardArr, setCharCardArr] = useState([])
     const [weaponCardArr, setWeaponCardArr] = useState([])
     const [roomCardArr, setRoomCardArr] = useState([])
+
+    
+    const [cardsObjByType, setCardsObjByType] = useState({
+        charCards: [],
+        weaponCards: [],
+        roomCards: []
+    })
+
+    
 
 
     // access the filtered cards as an object containing three properties
@@ -68,6 +80,23 @@ export const GameBoard = (props) => {
         }
     }, [])
 
+    useEffect(() => {
+            createCardsObjByType()
+    }, [charCardArr, weaponCardArr, roomCardArr])
+
+
+    const createCardsObjByType = () => {
+        //console.log(charCardArr);
+        //console.log(weaponCardArr);
+        //console.log(roomCardArr);
+        setCardsObjByType({
+            charCards: charCardArr,
+            weaponCards: weaponCardArr,
+            roomCards: roomCardArr
+        })
+
+    }
+
 
     // If the params in the url include '/play/:customGameId(\d+)',
     // load the settings of the custom game with that customGameId
@@ -76,7 +105,7 @@ export const GameBoard = (props) => {
 
     //console.log("currentCustomGame: ", currentGame.user);
 
-    const filterCardsByType = () => {
+    /*const filterCardsByType = () => {
         debugger;
         console.log("---------- filterCardsByType()");
         // ---- Original plan for filtering ----
@@ -106,7 +135,7 @@ export const GameBoard = (props) => {
             weaponCards: weaponSubset,
             roomCards: roomSubset
         })
-    }
+    }*/
 
     /*
     const checkCharType = (typeStr) => {
@@ -129,6 +158,8 @@ export const GameBoard = (props) => {
     //console.log("filteredCards: ", filteredCards);
     //filterCardsByType()
 
+
+
     return (
         <>
             <h1 className="gameboard-title">
@@ -138,48 +169,36 @@ export const GameBoard = (props) => {
             <section className="gameboard-gameInformation">
                 <div className="gameboard-gameName">{customGameId ? `Name: ${currentGame.gameName}` : <></>}</div>
                 <div className="gameboard-gameId">{customGameId ? `Creator Id: ${currentGame.user}` : <></>}</div>
-                <section className="gameboard-cardList">
-                    {/* {
-                        cards.map(card => {
-                            return <CardHTML key={card.id} cardObj={card} />
-                        })
-                    } */}
-                    {/* {filterCardsByType()} */}
-                    {/* <div className="charCardList">
-                        {cards.filter(card => {
-                                //console.log("CharCard?");
-                                if(card.type === "character"){
-                                    return <CardHTML key={card.id} cardObj={card} />
+                <div className="gameboard-playArea">
+                    <section className="gameboard-cardList">
+                        <div className="cardList charCardList">
+                            <h3 className="charList-title">Characters</h3>
+                            {charCardArr.map(card => {
+                                return <CardHTML key={card.id} cardObj={card} />
+                            })}
+                        </div>
+                        <div className="cardList weaponCardList">
+                            <h3 className="weaponList-title">Weapons</h3>
+                            {weaponCardArr.map(card => {
+                                return <CardHTML key={card.id} cardObj={card} />
+                            })}
+                        </div>
+                        <div className="cardList roomCardList">
+                            <h3 className="roomList-title">Rooms</h3>
+                            {roomCardArr.map(card => {
+                                return <CardHTML key={card.id} cardObj={card} />
+                            })}
+                        </div>
+                    </section>
+                    <section className="gameboard-accusationBox">
+                            <div className="accusationBox">
+                                {
+                                    (cardsObjByType.roomCards.length > 0 && cardsObjByType.weaponCards.length > 0 && cardsObjByType.charCards.length > 0) ? 
+                                    <AccusationHTML currentGameCards={cardsObjByType} /> : <>blah</>
                                 }
-                            })
-                        }
-                    </div> 
-                    
-                    <div className="weaponCardList">
-                        {filteredCards.weaponCards}
-                    </div>
-                    <div className="roomCardList">
-                        {filteredCards.roomCards}
-                    </div>*/}
-                    <div className="cardList charCardList">
-                        <h3 className="charList-title">Characters</h3>
-                        {charCardArr.map(card => {
-                            return <CardHTML key={card.id} cardObj={card} />
-                        })}
-                    </div>
-                    <div className="cardList weaponCardList">
-                        <h3 className="weaponList-title">Weapons</h3>
-                        {weaponCardArr.map(card => {
-                            return <CardHTML key={card.id} cardObj={card} />
-                        })}
-                    </div>
-                    <div className="cardList roomCardList">
-                        <h3 className="roomList-title">Rooms</h3>
-                        {roomCardArr.map(card => {
-                            return <CardHTML key={card.id} cardObj={card} />
-                        })}
-                    </div>
-                </section>
+                            </div>
+                    </section>
+                </div>
             </section>
         </>
     )

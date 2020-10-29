@@ -16,9 +16,15 @@
     padding: 0.5em 0;
 }
 
+.gameboard-playArea{
+    border: solid darkgrey 2px;
+    display: block;
+    position: relative;
+}
+
 .gameboard-cardList{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-
+    max-width: 600px;
 }
