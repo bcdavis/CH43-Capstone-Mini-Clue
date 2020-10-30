@@ -24,24 +24,4 @@ export const CardHTML = ({cardObj}) => {
     )
 }
 
-// export const AccusedCardToastToggle = (props) => {
-//     const { buttonLabel } = props;
-//     const [show, setShow] = useState(false);
-
-//     const toggle = () => setShow(!show);
-
-//     return (
-//         <div>
-//             <Button color="primary" onClick={toggle}>{buttonLabel}</Button>
-//             <br />
-//             <br />
-//             <Toast isOpen={show}>
-//                 <ToastHeader toggle={toggle}>Toast title</ToastHeader>
-//                 <ToastBody>
-
-//                 </ToastBody>
-//             </Toast>
-//         </div>
-//     );
-// }
 

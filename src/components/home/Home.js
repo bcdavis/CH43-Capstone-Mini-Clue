@@ -3,7 +3,7 @@
 import React from "react"
 //import "./Home.css"
 import { PlayClassicGame } from "./ClassicGame.js"
-import { PlayCustomGame } from "./CustomGame.js"
+//import { PlayCustomGame } from "./CustomGame.js"
 
 export const Home = () => (
     <>
@@ -11,9 +11,9 @@ export const Home = () => (
            <section className="classicGameContainer">
                <PlayClassicGame />
            </section>
-           <section className="customGameContainer">
+           {/* <section className="customGameContainer">
                <PlayCustomGame />
-           </section>
+           </section> */}
         </div>
 
     </>

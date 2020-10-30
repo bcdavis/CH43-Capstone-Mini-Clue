@@ -2,15 +2,15 @@ import React from "react"
 import { Route, useParams } from "react-router-dom"
 import { Home } from "./home/Home.js"
 import { Header } from "./Header.js"
-import { MyProfile } from "./profile/MyProfile.js"
+//import { MyProfile } from "./profile/MyProfile.js"
 import { HowToPlay } from "./HowToPlay.js"
 import { GameBoard } from "./game/GameBoard.js"
-import { CustomGameCreator } from "./customGame/CustomGameCreator.js"
+//import { CustomGameCreator } from "./customGame/CustomGameCreator.js"
 import { CustomGameProvider } from "./customGame/CustomGameProvider.js"
 import { CardProvider } from "./card/CardProvider.js"
 import { ClassicGameResultsProvider } from "./game/ClassicGameProvider.js"
 
-import { ProfileProvider } from "./profile/ProfileProvider.js"
+//import { ProfileProvider } from "./profile/ProfileProvider.js"
 
 export const ApplicationViews = (props) => {
     const activeUserId = sessionStorage.getItem("activeUser");
@@ -27,14 +27,14 @@ export const ApplicationViews = (props) => {
                             <GameBoard />
                         </Route>
 
-                        <Route exact path="/play/:customGameId(\d+)">
+                        {/* <Route exact path="/play/:customGameId(\d+)">
                             <GameBoard />
-                        </Route>
+                        </Route> */}
                     </ClassicGameResultsProvider>
 
-                    <Route exact path="/createCustom">
+                    {/* <Route exact path="/createCustom">
                         <CustomGameCreator />
-                    </Route>
+                    </Route> */}
                 </CustomGameProvider>
             </CardProvider>
 
@@ -43,11 +43,11 @@ export const ApplicationViews = (props) => {
                 <HowToPlay />
             </Route>
 
-            <ProfileProvider>
+            {/* <ProfileProvider>
                 <Route exact path="/profile/:userId(\d+)">
                     <MyProfile key={activeUserId}/>
                 </Route>
-            </ProfileProvider>
+            </ProfileProvider> */}
 
 
         </>
