@@ -1,6 +1,7 @@
 
 
-export const getScore = (accusablePeople, accusableWeapons, accusableRooms, completionTime, numPlayers) => {
+export const getScore = (accusablePeople, accusableWeapons, accusableRooms, time, numPlayers) => {
+    let completionTime = time / 1000;
     var score = 0;
     // add 10 points for every item not disproven:
     score += 10 * accusablePeople.length;

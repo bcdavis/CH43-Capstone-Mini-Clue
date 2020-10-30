@@ -3,7 +3,7 @@
 // or by creating a new custom game and then clicking "save settings" button. 
 
 import React, { useContext, useEffect, useState, useRef } from "react"
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
+//import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 //import { useParams } from "react-router-dom"
 import { CardContext } from "../card/CardProvider.js"
 import { CardHTML } from "../card/Card.js"
@@ -55,6 +55,10 @@ export const GameBoard = (props) => {
 
     const [gameTimer, setGameTimer] = useState(0) // initial timer state
 
+    const startTime = useRef(null);
+    const stopTime = useRef(null);
+    const timeDiff = useRef(null);
+
     const [game, setGame] = useState({
         characters: null,
         weapons: null,
@@ -91,6 +95,7 @@ export const GameBoard = (props) => {
     useEffect(() => {
         var numberOfPlayers = prompt("How many people are playing? (2 - 6)", "2");
         setNumPlayers(numberOfPlayers);
+        startTime.current = performance.now();
     }, [])
 
 
@@ -279,19 +284,29 @@ export const GameBoard = (props) => {
         let roomCards = roomCardArr;
         //console.log("accusedCards: ", accusedCards);
         if(accusedCards.accusedChar === culprit.who){
-            console.log("Matched the character")
+            //console.log("Matched the character")
             if(accusedCards.accusedWeapon === culprit.what){
-                console.log("Matched the weapon")
+                //console.log("Matched the weapon")
                 if(accusedCards.accusedRoom === culprit.where){
-                    console.log("Matched the room");
+                    //console.log("Matched the room");
                     console.log("Wait, did you just finish the game?!!");
                     console.log("\nSTOP THE CLOCK!\n\n");
+                    stopTime.current = performance.now()
                     timerToggle(false);
+                    // get the time spent playing, convert and round to whole seconds
+                    timeDiff.current = (stopTime - startTime) / 1000;
+                    console.log("timeDiff: ", timeDiff.current + " seconds");
+
+                    renderCulprit()
+
+                    renderScore()
+
+
                     //player.win = player.win + 1;        // update the winning player's win status
                 }
                 // if accused room is not the culprit, but still visible on the left, remove it
                 else {
-                    console.log("Did not match rooms");
+                    //console.log("Did not match rooms");
                     //console.log("roomCards: ", roomCards);
                     //console.log("accusedRoom: ", accusedCards.accusedRoom);
                     const newRooms = roomCards.filter(card => card.name !== accusedCards.accusedRoom)
@@ -303,7 +318,7 @@ export const GameBoard = (props) => {
             }
             // if accused weapon is not the culprit, but still visible on the left, remove it
             else { 
-                console.log("Did not match weapons");
+                //console.log("Did not match weapons");
                 //console.log("weaponCards: ", weaponCards);
                 //console.log("accusedWeapon: ", accusedCards.accusedWeapon);
                 const newWeapons = weaponCards.filter(card => card.name !== accusedCards.accusedWeapon)
@@ -316,7 +331,7 @@ export const GameBoard = (props) => {
         }
         // if accused character is not the culprit, but still visible on the left, remove it
         else {
-            console.log("Did not match characters");
+            //console.log("Did not match characters");
             //console.log("characterCards: ", charCards);
             //console.log("accusedChar: ", accusedCards.accusedChar);
             const newChars = charCards.filter(card => card.name !== accusedCards.accusedChar)
@@ -326,13 +341,16 @@ export const GameBoard = (props) => {
             setCharCardArr(newChars); // update visible cards
         }
     };
-/*
+
     // ------------------------------------------------------------------------- 
+
+
+    //const isNewBestScore
 
 
 
     // ------------------------- Play Game Section -----------------------------
-
+/*
     const play = (gameObj, playerList, gameOver, accusationResult ) => {
         var t0 = performance.now();
         while(gameOver === false){
@@ -383,8 +401,10 @@ export const GameBoard = (props) => {
                 document.getElementById("minutes").innerHTML = pad(parseInt(sec / 60, 10));
             }, 1000);
             setGameTimer(timer);
+            //console.log("timer: ", timer)
         }
         else {
+            //console.log("timer: ", timer)
             clearInterval(gameTimer);
         }
     }
@@ -393,7 +413,35 @@ export const GameBoard = (props) => {
 
     // -------------------------------------------------------------------------
 
+    const renderCulprit = () => {
 
+        const contentTarget = document.querySelector(".confidential");
+        contentTarget.innerHTML = `
+            <section className="envelope" >
+                <p>${`Who: ${culprit.who}`}</p>
+                <p>${`What: ${culprit.what}`}</p>
+                <p>${`Where: ${culprit.where}`}</p>
+            </section
+        `
+            
+    }
+
+    const renderScore = () => {
+
+        const contentTarget = document.querySelector(".scoreArea");
+
+        const myScore = getScore(charCardArr, weaponCardArr, roomCardArr, stopTime.current, numPlayers);
+
+        console.log(myScore)
+
+        contentTarget.innerHTML = `
+            <section className="myScore" >
+                <br></br>
+                <p>Score: ${myScore}</p>
+            </section
+        `
+            
+    }
 
     
 
@@ -469,15 +517,6 @@ export const GameBoard = (props) => {
         })      
     }
 
-
-
-
-    const renderMyhand = () => {
-        
-    }
-
-
-
     return (
         <>
             <div className="gameboard-top">
@@ -528,11 +567,8 @@ export const GameBoard = (props) => {
                     </section>
                 </div>
                 <div className="confidential">
-                    <section className="envelope">
-                            <p>{`Who: ${culprit.who}`}</p>
-                            <p>{`What: ${culprit.what}`}</p>
-                            <p>{`Where: ${culprit.where}`}</p>
-                    </section>
+                </div>
+                <div className="scoreArea">
                 </div>
             </section>
         </>

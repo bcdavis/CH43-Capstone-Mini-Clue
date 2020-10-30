@@ -1,0 +1,19 @@
+
+.classicGame-home--title{
+    font-size: 8em;
+    font-weight: lighter;
+    margin: 10px 10px;
+}
+
+.homeContainer { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.playClassicBtn{
+    width: 10em;
+    height: 2em;
+    font-size: 1.5em;
+}

@@ -3,6 +3,7 @@
 
 import React from "react"
 import { useHistory } from 'react-router-dom';
+import "./Home.css"
 
 export const PlayClassicGame = () => {
 
@@ -14,10 +15,12 @@ export const PlayClassicGame = () => {
 
     return (
         <>
+        <div className="homeContainer">
             <h1 className="classicGame-home--title">Classic</h1>
             <div className="playClassicBtn--container">
                 <button type="button" className="playClassicBtn" onClick={navToPlayGame}>New Game</button>
             </div>
+        </div>
         </>
     )
 }

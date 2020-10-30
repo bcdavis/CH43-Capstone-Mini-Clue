@@ -1,0 +1,26 @@
+
+body {font-family: Arial;}
+
+.react-tabs__tab--selected{
+    color: black;
+    background: rgba(255, 255, 255, 0);
+}
+
+.Tab{
+    color: white;
+}
+
+.container {
+    width: 600px;
+
+}
+
+.biggerContainer {
+    display: flex;
+    justify-content: center;
+    padding: 5em 2em;
+}
+
+ul, li {
+    color: white;
+}
