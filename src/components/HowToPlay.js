@@ -119,7 +119,7 @@ export const HowToPlay = () => {
                         <h2>Game Rules</h2>
                         <section className="textBox">
                             <p><strong>Starting the Game: </strong> Enter a number of players between 2 and 6 </p>
-                            <p><strong>Playing: </strong> The list of cards on the left represents all the cards in the classic Clue game. Your job is to select a single character, weapon, and room from the dropdowns to the right and press the accuse button. If the character is not the culprit, it is removed from the list of available cards on the left, letting you know that it is disproven. Continue doing this until there's only one card left in each column or until you happen to accuse the actual culprit. Once you accuse correctly, the timer will stop and th eculprit will be shown.</p>
+                            <p><strong>Playing: </strong> The list of cards on the left represents all the cards in the classic Clue game. Your job is to select a single character, weapon, and room from the dropdowns to the right and press the accuse button. If the character is not the culprit, it is removed from the list of available cards on the left, letting you know that it is disproven. Continue doing this until there's only one card left in each column or until you happen to accuse the actual culprit. Once you accuse correctly, the timer will stop and the culprit will be shown.</p>
                             
                         </section>
                     </TabPanel>
