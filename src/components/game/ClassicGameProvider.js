@@ -13,6 +13,18 @@ export const ClassicGameResultsProvider = (props) => {
     const updateBestResults = (newBestResultsObj) => {
         console.log("newBestResultsObj_to_add: ", newBestResultsObj);
         return fetch("http://localhost:8088/bestGameResults", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newBestResultsObj) 
+        })
+        .then(res => res.json()) // return the game results object just uploaded to the database
+    }
+
+    const addBestResults = (newBestResultsObj) => {
+        console.log("newBestResultsObj_to_add: ", newBestResultsObj);
+        return fetch("http://localhost:8088/bestGameResults", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -26,7 +38,7 @@ export const ClassicGameResultsProvider = (props) => {
 
     return (
         <ClassicGameResultsContext.Provider value={{
-            getBestResultsByUserId, updateBestResults
+            getBestResultsByUserId, updateBestResults, addBestResults
         }}>
             {props.children}
         </ClassicGameResultsContext.Provider>

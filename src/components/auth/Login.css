@@ -1,0 +1,42 @@
+
+.small{ 
+    width: 20em;
+    text-align: left;
+}
+
+.form--login{
+    width: 22em;
+}
+
+.form--login > h1 {
+    text-align: center;
+    letter-spacing: 50px;
+    font-size: 4em;
+    font-weight: lighter;
+    
+
+    margin: 0 0 0 0;
+    
+}
+
+.form--register > h1 {
+    text-align: center;
+    width: fit-content;
+    margin: 0;
+    margin-bottom: 1em;
+}
+
+.container--login{
+    display: block;
+    width: 20em;
+    margin-top: 5em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container--register{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5em;
+}

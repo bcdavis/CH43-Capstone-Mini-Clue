@@ -1,7 +1,12 @@
 
 
 export const getScore = (accusablePeople, accusableWeapons, accusableRooms, time, numPlayers) => {
-    let completionTime = time / 1000;
+
+    console.log("-------- time input for getScore() : ", Number(time));
+
+
+    let completionTime = Number(time) / 1000;
+    completionTime.toFixed(2);
     var score = 0;
     // add 10 points for every item not disproven:
     score += 10 * accusablePeople.length;
@@ -35,22 +40,22 @@ export const getScore = (accusablePeople, accusableWeapons, accusableRooms, time
     var lvl = "";
     var bonus = "";
     // "difficulty" setting bonus (based on number of players):
-    if(numPlayers === 2){
+    if(numPlayers === '2'){
         lvl = "easy, two players";
         score -= score * 0.10; // easy -> subtract 10% 
         bonus = "-10%";
     }
-    else if(numPlayers === 4){
+    else if(numPlayers === '4'){
         lvl = "advanced, four players";
         score += score * 0.10; // advanced -> add 5%
         bonus = "+10%";
     }
-    else if(numPlayers === 5){
+    else if(numPlayers === '5'){
         lvl = "hard, five players";
         score += score * 0.25; // hard -> add 10%
         bonus = "+25%";
     }
-    else if(numPlayers === 6){
+    else if(numPlayers === '6'){
         lvl = "expert, six players";
         score += score * 0.50; // very hard (expert) -> add 20%
         bonus = "+50%";

@@ -51,16 +51,16 @@ export const Register = (props) => {
     }
 
     return (
-        <main style={{ textAlign: "center" }}>
+        <main className="container--register" style={{ textAlign: "center" }}>
 
             <dialog className="dialog dialog--email" ref={emailDialog}>
                 <div>Please enter an email</div>
                 <button className="button--close" onClick={e => emailDialog.current.close()}>Close</button>
             </dialog>
 
-            <form className="form--login" onSubmit={handleRegister}>
+            <form className="form--register" onSubmit={handleRegister}>
                 <h1 className="h3 mb-3 font-weight-normal">Become a Clue Player</h1>
-                <fieldset>
+                <fieldset className="small">
                     <label htmlFor="inputUsername"> Username </label>
                     <input ref={userName} type="text"
                         name="userName"
@@ -68,7 +68,7 @@ export const Register = (props) => {
                         placeholder="ExampleUsername65"
                         required autoFocus />
                 </fieldset>
-                <fieldset>
+                <fieldset className="small">
                     <label htmlFor="inputEmail"> Email address </label>
                     <input ref={email} type="email"
                         name="email"
@@ -76,7 +76,7 @@ export const Register = (props) => {
                         placeholder="Email address"
                         required />
                 </fieldset>
-                <fieldset>
+                <fieldset className="small">
                     <button type="submit">
                         Sign in
                     </button>

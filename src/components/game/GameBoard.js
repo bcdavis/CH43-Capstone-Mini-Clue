@@ -5,21 +5,26 @@
 import React, { useContext, useEffect, useState, useRef } from "react"
 //import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 //import { useParams } from "react-router-dom"
+import { useHistory } from 'react-router-dom';
 import { CardContext } from "../card/CardProvider.js"
 import { CardHTML } from "../card/Card.js"
 import { ClassicGameResultsContext } from "./ClassicGameProvider.js"
 import { AccusationHTML } from "./functions/accusation.js"
 import { setup } from "./functions/setup.js"
 import { getScore } from "./functions/score.js"
+import Modal from 'react-modal';
 import "./Game.css"
+import { PostGameModal } from "./PostGameModal.js";
 
 export const GameBoard = (props) => {
 
     const { cards, getCardsByGameId, getCardsByGameIdAndType } = useContext(CardContext)
-    //const { getBestResultsByUserId, updateBestResults} = useContext(ClassicGameResultsContext)
+    const { getBestResultsByUserId, updateBestResults, addBestResults} = useContext(ClassicGameResultsContext)
 
     //const [currentGame, setCurrentGame] = useState({})
-    const [gameResults, setGameResults] = useState() // used to set the game results at the end of a game
+    //const [gameResults, setGameResults] = useState() // used to set the game results at the end of a game
+    const activeUserId = sessionStorage.getItem("activeUser");
+    const history = useHistory();
     
 
     // ------------- Game State Variables -----------------
@@ -55,16 +60,31 @@ export const GameBoard = (props) => {
 
     const [gameTimer, setGameTimer] = useState(0) // initial timer state
 
-    const startTime = useRef(null);
-    const stopTime = useRef(null);
-    const timeDiff = useRef(null);
+    const [gameScore, setGameScore] = useState(0)
+
+    const [modalIsOpen, setIsOpen] = useState(false)
+
+    var subtitle;
+
+    //const startTime = useRef(null);
+    //const stopTime = useRef(null);
+    //const timeDiff = useRef(null);
+
+
+    //let startTime = 0;
+    //let endTime = 0;
+    //let timeDiff = 0;
+
+    const [startTime, setStartTime] = useState();
+    const [endTime, setEndTime] = useState("startTime above, timeDiff below?");
+    const [timeDiff, setTimeDiff] = useState();
 
     const [game, setGame] = useState({
+        userId: null,
         characters: null,
         weapons: null,
         rooms: null,
         players: null,
-        setupTime: null,
         completionTime: null,
         accusables: [],
         score: null
@@ -94,8 +114,9 @@ export const GameBoard = (props) => {
 
     useEffect(() => {
         var numberOfPlayers = prompt("How many people are playing? (2 - 6)", "2");
+        console.log("number of players? : ", numberOfPlayers);
         setNumPlayers(numberOfPlayers);
-        startTime.current = performance.now();
+        setStartTime(performance.now())
     }, [])
 
 
@@ -143,6 +164,19 @@ export const GameBoard = (props) => {
     }, [allCharacters, allWeapons, allRooms])
 
 
+    // when game is finished, check results and upload new high score if necessary
+    useEffect(() => {
+        if(gameOver === true) {
+            // game is over, check if active user's current bestGameResult score is higher or lower than current game score
+            getBestResultsByUserId(activeUserId)
+            .then(result => {
+                compareGameResults(result, game)
+            })
+
+        }
+    }, [game, gameOver])
+
+
 
 
     // Handle the form inputs
@@ -155,6 +189,36 @@ export const GameBoard = (props) => {
         newAccusedCards[event.target.name] = event.target.value
         //update state
         setAccusedCards(newAccusedCards)
+    }
+
+
+    const compareGameResults = (existingResults, currentResults) => {
+        // existingResults is an object inside a one-element array, access obj with [0]
+        // both parameters are objects, so access score with .score
+    
+        // does the existing game exist?
+        if(existingResults[0]){
+            // then the existing results must include a score to compare
+            console.log("existingResults score: ", existingResults[0].score)
+            console.log("currentResults score: ", currentResults.score)
+
+            if(currentResults.score >= existingResults[0].score){
+                // if the current score is as high or higher than the existing score, update the user's best Classic game results
+                console.log("New high score: ", currentResults.score)
+                updateBestResults(currentResults)
+
+            }
+            else{
+                console.log("High score: ", existingResults[0].score)
+            }
+
+        }
+        else{
+            // existing score does not exist, so just add currentResults to database
+            console.log("User's first game results!")
+            addBestResults(currentResults)
+            
+        }
     }
 
 
@@ -277,6 +341,37 @@ export const GameBoard = (props) => {
         }
     };
 */
+
+    // returns the current time in milliseconds since program began running
+    async function getCurrentMillis() {
+        return performance.now()
+    }
+
+    async function setTotalTime() {
+        timerToggle(false);
+        let stopTime = await getCurrentMillis();
+        console.log("--- setTotalTime() - async -> newTime: ", stopTime)
+        let totalTime = Number(stopTime) - Number(startTime);
+        return totalTime
+    }
+
+    async function continueOnTimeDiffSet() {
+        let inputTimeDiff = await setTotalTime()
+        console.log("inputTimeDiff (should = totalTime from setTotalTime): ", inputTimeDiff)
+        if(inputTimeDiff){
+            setTimeDiff(inputTimeDiff)
+            return inputTimeDiff // want to pass this into the scoring function
+        }
+        else{
+            return 0 
+        }
+    }
+
+
+
+
+
+
     // check final accusation against contents of confidential folder
     const finish = () => {
         let charCards = charCardArr;
@@ -291,15 +386,25 @@ export const GameBoard = (props) => {
                     //console.log("Matched the room");
                     console.log("Wait, did you just finish the game?!!");
                     console.log("\nSTOP THE CLOCK!\n\n");
-                    stopTime.current = performance.now()
-                    timerToggle(false);
-                    // get the time spent playing, convert and round to whole seconds
-                    timeDiff.current = (stopTime - startTime) / 1000;
-                    console.log("timeDiff: ", timeDiff.current + " seconds");
+                    // let setEndTime = new Promise(function(response, reject) { 
+                    //     response(performance.now())
+                    // })
 
-                    renderCulprit()
+                    continueOnTimeDiffSet().then(
+                        function(value) {
+                            console.log("--- inside function(value) {} of continueOnTimeDiffSet() --> value: ", value);
+                            //timerToggle(false);
+                            //setTimeDiff(value)
+                            setGameOver(true)
+                            openModal()
+                            renderCulprit()
+                            setGameScore(renderScore(value))
 
-                    renderScore()
+                            // renderCulprit()
+                            // setGameScore(renderScore(value))
+
+                        }
+                    )
 
 
                     //player.win = player.win + 1;        // update the winning player's win status
@@ -406,6 +511,7 @@ export const GameBoard = (props) => {
         else {
             //console.log("timer: ", timer)
             clearInterval(gameTimer);
+            
         }
     }
 
@@ -418,6 +524,7 @@ export const GameBoard = (props) => {
         const contentTarget = document.querySelector(".confidential");
         contentTarget.innerHTML = `
             <section className="envelope" >
+                <h3>Culprit</h3>
                 <p>${`Who: ${culprit.who}`}</p>
                 <p>${`What: ${culprit.what}`}</p>
                 <p>${`Where: ${culprit.where}`}</p>
@@ -426,21 +533,43 @@ export const GameBoard = (props) => {
             
     }
 
-    const renderScore = () => {
+    const renderCulpritDebug = () => {
+       return <section className="envelopeDebug" >
+                <p>${`Who: ${culprit.who}`}</p>
+                <p>${`What: ${culprit.what}`}</p>
+                <p>${`Where: ${culprit.where}`}</p>
+            </section>
+       
+    }
 
+    const renderScore = (inputTime) => {
         const contentTarget = document.querySelector(".scoreArea");
-
-        const myScore = getScore(charCardArr, weaponCardArr, roomCardArr, stopTime.current, numPlayers);
-
+        const myScore = getScore(charCardArr, weaponCardArr, roomCardArr, inputTime, numPlayers);
+        let accusableAll = charCardArr.concat(weaponCardArr, roomCardArr);
+        let timeInSec = Number(inputTime) / 1000;
         console.log(myScore)
-
+        setGame({
+            userId: activeUserId,
+            characters: charCardArr,
+            weapons: weaponCardArr,
+            rooms: roomCardArr,
+            players: numPlayers,
+            completionTime: Number(timeInSec).toFixed(2),
+            accusables: accusableAll.length,
+            score: myScore
+        })
         contentTarget.innerHTML = `
             <section className="myScore" >
-                <br></br>
-                <p>Score: ${myScore}</p>
+                <p><strong>Players:</strong> ${numPlayers}</p>
+                <p><strong>Completion Time:</strong> ${(Number(inputTime)/1000).toFixed(2)} seconds</p>
+                <p><strong>Characters remaining:</strong> ${charCardArr.length}</p>
+                <p><strong>Weapons remaining:</strong> ${weaponCardArr.length}</p>
+                <p><strong>Rooms remaining:</strong> ${roomCardArr.length}</p>
+                <p><strong>Score:</strong> ${myScore}\n</p>
             </section
-        `
-            
+            `
+        return myScore
+        
     }
 
     
@@ -505,9 +634,9 @@ export const GameBoard = (props) => {
     }
 
     const generateRandomCulprit = () => {
-    let person = Math.floor((Math.random() * (charCardArr.length - 1)) + 0);
-        let weapon = Math.floor((Math.random() * (weaponCardArr.length - 1)) + 0);
-        let room = Math.floor((Math.random() * (roomCardArr.length - 1)) + 0);
+    let person = Math.floor((Math.random() * (charCardArr.length)) + 0);
+        let weapon = Math.floor((Math.random() * (weaponCardArr.length)) + 0);
+        let room = Math.floor((Math.random() * (roomCardArr.length)) + 0);
         console.log("person: " + person + " weapon: " + weapon + " room: " + room)
         setCulprit({
             who: charCardArr[person].name,         // return random name from characters array
@@ -517,8 +646,76 @@ export const GameBoard = (props) => {
         })      
     }
 
+    // post game modal 
+
+    const openModal = () => {
+        setIsOpen(true);
+    }
+    
+    const afterOpenModal = () => {
+        // references are now sync'd and can be accessed.
+        subtitle.style.color = '#f00';
+    }
+    
+    const closeModal = () => {
+        setIsOpen(false);
+        history.push("/"); // take the player back to the home page
+    }
+
+    const PostGameModal = (HTMLTarget) => {
+        const customStyles = {
+            content : {
+                top                   : '50%',
+                left                  : '50%',
+                right                 : 'auto',
+                bottom                : 'auto',
+                marginRight           : '-50%',
+                transform             : 'translate(-50%, -50%)'
+            }
+        };
+        
+        Modal.setAppElement(HTMLTarget)
+    
+        return (
+
+            <div>
+                <Modal
+                    id="open-modal"
+                    className="postGameModal"
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    //style={customStyles}
+                    contentLabel="Example Modal"
+                >
+                    <button onClick={closeModal} title="Close" className="postGameModal-close">Close</button>
+                    <div className="postGameModal-window">
+                        {/* <button onClick={closeModal} title="Close" className="postGameModal-close">Close</button> */}
+                        <h2 ref={_subtitle => (subtitle = _subtitle)}>Case Solved!</h2>
+                        {/* <div>I am a modal</div> */}
+                    
+                        <div className="postGameModal-gameResults">
+                            <div className="confidential">
+                            </div>
+                            <div className="scoreArea">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    {/* <button className="postGameModal-close" onClick={closeModal}>close</button> */}
+                </Modal>
+            </div>
+        );
+    }
+
     return (
         <>
+            <div className="modalGoesHere">
+                {PostGameModal(document.querySelector(".modalGoesHere"))}
+            </div>
+
+
             <div className="gameboard-top">
                 <h1 className="gameboard-title">Classic Game</h1>
                 <div className="timerBox">
@@ -566,9 +763,8 @@ export const GameBoard = (props) => {
                             </div>
                     </section>
                 </div>
-                <div className="confidential">
-                </div>
-                <div className="scoreArea">
+                <div className="confidentialDebug">
+                    {renderCulpritDebug()}
                 </div>
             </section>
         </>

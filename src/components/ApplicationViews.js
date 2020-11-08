@@ -5,7 +5,7 @@ import { Header } from "./Header.js"
 //import { MyProfile } from "./profile/MyProfile.js"
 import { HowToPlay } from "./HowToPlay.js"
 import { GameBoard } from "./game/GameBoard.js"
-//import { CustomGameCreator } from "./customGame/CustomGameCreator.js"
+import { CustomGameCreator } from "./customGame/CustomGameCreator.js"
 import { CustomGameProvider } from "./customGame/CustomGameProvider.js"
 import { CardProvider } from "./card/CardProvider.js"
 import { ClassicGameResultsProvider } from "./game/ClassicGameProvider.js"
@@ -27,14 +27,14 @@ export const ApplicationViews = (props) => {
                             <GameBoard />
                         </Route>
 
-                        {/* <Route exact path="/play/:customGameId(\d+)">
+                        <Route exact path="/play/:customGameId(\d+)">
                             <GameBoard />
-                        </Route> */}
+                        </Route>
                     </ClassicGameResultsProvider>
 
-                    {/* <Route exact path="/createCustom">
+                    <Route exact path="/createCustom">
                         <CustomGameCreator />
-                    </Route> */}
+                    </Route>
                 </CustomGameProvider>
             </CardProvider>
 
