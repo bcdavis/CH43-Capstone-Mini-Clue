@@ -16,9 +16,11 @@ export const ApplicationViews = (props) => {
     const activeUserId = sessionStorage.getItem("activeUser");
     return (
         <>  
-            <Route exact path="/">
-                <Home />
-            </Route>
+            <ClassicGameResultsProvider>
+                <Route exact path="/">
+                    <Home />
+                </Route>
+            </ClassicGameResultsProvider>
             
             <CardProvider>
                 <CustomGameProvider>

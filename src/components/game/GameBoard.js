@@ -14,7 +14,7 @@ import { setup } from "./functions/setup.js"
 import { getScore } from "./functions/score.js"
 import Modal from 'react-modal';
 import "./Game.css"
-import { PostGameModal } from "./PostGameModal.js";
+
 
 export const GameBoard = (props) => {
 
@@ -166,12 +166,19 @@ export const GameBoard = (props) => {
 
     // when game is finished, check results and upload new high score if necessary
     useEffect(() => {
+        console.log("useEffect -- gameOver: ", gameOver);
+        //console.log("useEffect -- gameOver: ", gameOver);
         if(gameOver === true) {
-            // game is over, check if active user's current bestGameResult score is higher or lower than current game score
-            getBestResultsByUserId(activeUserId)
-            .then(result => {
-                compareGameResults(result, game)
-            })
+            console.log("gameOver is TRUE")
+            if(game.score !== null){
+                console.log("game.score is NOT null")
+                // game is over, check if active user's current bestGameResult score is higher or lower than current game score
+
+                getBestResultsByUserId(activeUserId)
+                .then(result => {
+                    compareGameResults(result, game)
+                })
+            }
 
         }
     }, [game, gameOver])
@@ -193,23 +200,25 @@ export const GameBoard = (props) => {
 
 
     const compareGameResults = (existingResults, currentResults) => {
+        console.log("existingResults: ", existingResults)
+        console.log("currentResults: ", currentResults)
         // existingResults is an object inside a one-element array, access obj with [0]
         // both parameters are objects, so access score with .score
     
         // does the existing game exist?
         if(existingResults[0]){
             // then the existing results must include a score to compare
-            console.log("existingResults score: ", existingResults[0].score)
+            console.log("existingResults score: ", Number(existingResults[0].score))
             console.log("currentResults score: ", currentResults.score)
 
-            if(currentResults.score >= existingResults[0].score){
+            if(currentResults.score >= Number(existingResults[0].score)){
                 // if the current score is as high or higher than the existing score, update the user's best Classic game results
                 console.log("New high score: ", currentResults.score)
-                updateBestResults(currentResults)
+                updateBestResults(existingResults[0].id, currentResults)
 
             }
             else{
-                console.log("High score: ", existingResults[0].score)
+                console.log("High score: ", Number(existingResults[0].score))
             }
 
         }
@@ -533,14 +542,14 @@ export const GameBoard = (props) => {
             
     }
 
-    const renderCulpritDebug = () => {
-       return <section className="envelopeDebug" >
-                <p>${`Who: ${culprit.who}`}</p>
-                <p>${`What: ${culprit.what}`}</p>
-                <p>${`Where: ${culprit.where}`}</p>
-            </section>
+    // const renderCulpritDebug = () => {
+    //    return <section className="envelopeDebug" >
+    //             <p>${`Who: ${culprit.who}`}</p>
+    //             <p>${`What: ${culprit.what}`}</p>
+    //             <p>${`Where: ${culprit.where}`}</p>
+    //         </section>
        
-    }
+    // }
 
     const renderScore = (inputTime) => {
         const contentTarget = document.querySelector(".scoreArea");
@@ -763,9 +772,9 @@ export const GameBoard = (props) => {
                             </div>
                     </section>
                 </div>
-                <div className="confidentialDebug">
+                {/* <div className="confidentialDebug">
                     {renderCulpritDebug()}
-                </div>
+                </div> */}
             </section>
         </>
     )

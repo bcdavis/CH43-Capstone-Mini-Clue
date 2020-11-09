@@ -1,0 +1,43 @@
+
+#leaderboard {
+    /* border: solid black 2px; */
+    margin-top: 5em;
+    padding: 10px 20px;
+    width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#leaderboard-table {
+    background-color: whitesmoke;
+    width: 100%;
+    border-spacing: 5px;
+}
+
+#leaderboard-table, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 4px;
+}
+
+th { 
+    width: 2em;
+}
+
+td {
+    width: 2em;
+    text-align: left;
+}
+
+#leaderboard-table tr:nth-child(even){
+    background-color: #eee;
+}
+
+
+#leaderboard-table > thead > tr {
+    line-height: 20px;
+    
+}
