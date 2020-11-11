@@ -1,3 +1,301 @@
+
+## Run This Program
+
+Clone this repository into a new directory in your workspace.
+
+Navigate into the cloned directory and make a new direcroty called `api` by running `mkdir api`
+
+Navigate into the new `api` directory and run `touch database.json`
+
+To populate the database.json file you can run the following script on the command line: 
+
+```
+    echo "{
+    "users": [],
+    "bestGameResults": [],
+    "cards": [
+        {
+            "id": 1,
+            "name": "Colonel Mustard",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 2,
+            "name": "Mr. Green",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 3,
+            "name": "Professor Plum",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 4,
+            "name": "Mrs. White",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 5,
+            "name": "Miss Scarlet",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 6,
+            "name": "Mrs. Peacock",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 7,
+            "name": "Conservatory",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 8,
+            "name": "Ballroom",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 9,
+            "name": "Billiards Room",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 10,
+            "name": "Great Hall",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 11,
+            "name": "Library",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 12,
+            "name": "Lounge",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 13,
+            "name": "Study",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 14,
+            "name": "Kitchen",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 15,
+            "name": "Dining Room",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 16,
+            "name": "Lead Pipe",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 17,
+            "name": "Knife",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 18,
+            "name": "Candlestick",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 19,
+            "name": "Gun",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 20,
+            "name": "Rope",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 21,
+            "name": "Wrench",
+            "type": "weapon",
+            "gameId": 0
+        }
+    ]
+}
+" >> database.json
+```
+
+Or open the database.json file manually and paste in the following code: 
+
+```
+{
+    "users": [],
+    "bestGameResults": [],
+    "cards": [
+        {
+            "id": 1,
+            "name": "Colonel Mustard",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 2,
+            "name": "Mr. Green",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 3,
+            "name": "Professor Plum",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 4,
+            "name": "Mrs. White",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 5,
+            "name": "Miss Scarlet",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 6,
+            "name": "Mrs. Peacock",
+            "type": "character",
+            "gameId": 0
+        },
+        {
+            "id": 7,
+            "name": "Conservatory",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 8,
+            "name": "Ballroom",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 9,
+            "name": "Billiards Room",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 10,
+            "name": "Great Hall",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 11,
+            "name": "Library",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 12,
+            "name": "Lounge",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 13,
+            "name": "Study",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 14,
+            "name": "Kitchen",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 15,
+            "name": "Dining Room",
+            "type": "room",
+            "gameId": 0
+        },
+        {
+            "id": 16,
+            "name": "Lead Pipe",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 17,
+            "name": "Knife",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 18,
+            "name": "Candlestick",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 19,
+            "name": "Gun",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 20,
+            "name": "Rope",
+            "type": "weapon",
+            "gameId": 0
+        },
+        {
+            "id": 21,
+            "name": "Wrench",
+            "type": "weapon",
+            "gameId": 0
+        }
+    ]
+}
+
+```
+
+If you don't have JSON server already installed, run the following script in the terminal:
+
+`npm install -g json-server`
+
+To serve the database, in a new terminal window, navigate to the new `api` directory in this project's directory and run `json-server -p 8088 -w database.json`. This hosts the database locally for you to access on your machine with the app.
+
+To run the app, in a new terminal window, navigate into the `src` directory and run `npm start` to start the program.
+
+
+## Known Issues
+
+When playing a game, if the user clicks either the "Home" or "How to Play" button in the nav bar, the page breaks due to the timer trying to update a DOM element that no longer exists. If you want to navigate away from the gameboard page, make sure to perform a page reload to reset the new page. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -43,25 +341,6 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
 ### `npm run build` fails to minify
 

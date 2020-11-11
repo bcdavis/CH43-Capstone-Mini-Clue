@@ -59,28 +59,32 @@ export const Register = (props) => {
             </dialog>
 
             <form className="form--register" onSubmit={handleRegister}>
-                <h1 className="h3 mb-3 font-weight-normal">Become a Clue Player</h1>
-                <fieldset className="small">
-                    <label htmlFor="inputUsername"> Username </label>
-                    <input ref={userName} type="text"
-                        name="userName"
-                        className="form-control"
-                        placeholder="ExampleUsername65"
-                        required autoFocus />
-                </fieldset>
-                <fieldset className="small">
-                    <label htmlFor="inputEmail"> Email address </label>
-                    <input ref={email} type="email"
-                        name="email"
-                        className="form-control"
-                        placeholder="Email address"
-                        required />
-                </fieldset>
-                <fieldset className="small">
-                    <button type="submit">
-                        Sign in
-                    </button>
-                </fieldset>
+                <h1 className="h3 mb-3 font-weight-normal">New Account</h1>
+                <div className="fieldset-container">
+                    <fieldset className="small">
+                        <label htmlFor="inputUsername"> Username </label>
+                        <br></br>
+                        <input ref={userName} type="text"
+                            name="userName"
+                            className="form-control"
+                            placeholder="ExampleUsername65"
+                            required autoFocus />
+                    </fieldset>
+                    <fieldset className="small">
+                        <label htmlFor="inputEmail"> Email address </label>
+                        <br></br>
+                        <input ref={email} type="email"
+                            name="email"
+                            className="form-control"
+                            placeholder="Email address"
+                            required />
+                    </fieldset>
+                    <fieldset className="small">
+                        <button type="submit">
+                            Sign in
+                        </button>
+                    </fieldset>
+                </div>
             </form>
         </main>
     )

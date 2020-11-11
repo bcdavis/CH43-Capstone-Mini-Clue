@@ -5,9 +5,7 @@ import React, { useState, createContext } from "react"
 export const CustomGameContext = createContext()
 
 export const CustomGameProvider = (props) => {
-    //const [customGame, setCustomGame] = useState([])
     const [customGames, setCustomGames] = useState([])
-    //const [currentUser, setCurrentUser] = useState([])
     const userId = sessionStorage.getItem("activeUser")
 
     const getCustomGames = () => {
@@ -15,18 +13,10 @@ export const CustomGameProvider = (props) => {
             .then(res => res.json())
             .then(setCustomGames)
     }
-/*
-    // Grab the activeUser's profile so it can be updated with a new custom game
-    const getCurrentUser = () => {
-        return fetch(`http://localhost:8088/users?id=${userId}`)
-            .then(res => res.json())
-            .then(setCurrentUser)
-    }
-*/
+
     // CustomGames are added when the settings to a new custom game are saved
     // Cards associated with the custom game id are also saved
     const addCustomGame = customGameObj => {
-        console.log("customGameObj_to_add: ", customGameObj);
         return fetch("http://localhost:8088/customGames", {
             method: "POST",
             headers: {
@@ -42,11 +32,8 @@ export const CustomGameProvider = (props) => {
              *  isPrivate: 
              * }
              */
-            
-             // When adding a custom game, the active user's myCustomGames counter should also be updated
         })
             .then(res => res.json())
-            //.then(getCustomGameByNameAndUserId(customGameObj.gameName, customGameObj.userId))
     }
 
     // Grab a custom game that corresponds to a particular game Id (classic games have CustomGames with gameId = 0)
@@ -73,9 +60,6 @@ export const CustomGameProvider = (props) => {
         })
             .then(getCustomGameByGameId(gameObj.id))
     }
-
-
-    
 
     // custom games are only deleted when the button to delete a custom game is pressed
     // This SHOULD also delete any cards associated with the custom game id

@@ -1,11 +1,11 @@
 
 .small{ 
-    width: 20em;
     text-align: left;
+    margin: 10px 15px 10px 10px;
 }
 
-.form--login{
-    width: 22em;
+#email {
+    width: 100%;
 }
 
 .form--login > h1 {
@@ -19,14 +19,32 @@
     
 }
 
+fieldset{
+    border: none;
+    padding: 0;
+}
+
+.fieldset-container {
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    border: solid whitesmoke 2px;
+    margin: 0;
+}
+
 .form--register > h1 {
     text-align: center;
-    width: fit-content;
     margin: 0;
     margin-bottom: 1em;
 }
 
+.form-control{
+    margin-top: 5px;
+    width: 100%;
+}
+
 .container--login{
+    position: relative;
     display: block;
     width: 20em;
     margin-top: 5em;
@@ -35,8 +53,14 @@
 }
 
 .container--register{
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 5em;
+}
+
+.link--register {
+    text-align: center;
+    margin-top: 8px;
 }

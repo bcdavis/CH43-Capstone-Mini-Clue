@@ -45,7 +45,6 @@ export const CardProvider = (props) => {
         console.log(`Grabbing cards of gameId = ${gameId} of type = ${typeStr}`)
         return fetch(`http://localhost:8088/cards?gameId=${gameId}&type=${typeStr}`)
             .then(res => res.json())
-            // .then(setCards)
     }
 
     // Cards are only deleted when the custom game id that they correspond to is also deleted

@@ -104,6 +104,10 @@
     margin: 0;
 }
 
+.scoreArea h3 {
+    text-align: center;
+}
+
 .postGameModal {
     border: solid white 2px;
     border-radius: 20px;
@@ -151,4 +155,15 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.newHighScore {
+    display: flex;
+    justify-content: center;
+}
+
+.newHighScore h1{
+    display: block;
+    text-align: center;
+    margin-top: 18%;
 }

@@ -6,7 +6,6 @@ import "./Login.css"
 export const Login = props => {
     const history = useHistory()
     const email = useRef()
-    //const password = useRef()
     const existDialog = useRef()
     const emailDialog = useRef()
 
@@ -51,20 +50,23 @@ export const Login = props => {
             <section>
                 <form className="form--login" onSubmit={handleLogin}>
                     <h1 className="title">CLUE</h1>
-                    <h2>Please sign in</h2>
-                    <fieldset className="small">
-                        <label htmlFor="inputEmail"> Email address </label>
-                        <input ref={email} type="email"
-                            id="email"
-                            className="form-control"
-                            placeholder="Email address"
-                            required autoFocus />
-                    </fieldset>
-                    <fieldset className="small">
-                        <button type="submit">
-                            Sign in
-                        </button>
-                    </fieldset>
+                    <h2>Sign in</h2>
+                    <div className="fieldset-container">
+                        <fieldset className="small">
+                            <label htmlFor="inputEmail"> Email address </label>
+                            <br></br>
+                            <input ref={email} type="email"
+                                id="email"
+                                className="form-control"
+                                placeholder="Email address"
+                                required autoFocus />
+                        </fieldset>
+                        <fieldset className="small">
+                            <button type="submit">
+                                Sign in
+                            </button>
+                        </fieldset>
+                    </div>
                 </form>
             </section>
             <section className="link--register">

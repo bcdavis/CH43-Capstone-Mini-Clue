@@ -1,19 +1,15 @@
 // This file describes the functionality and the appearance of the playable game area
 // This page is accessed by either clicking the "New Game" button for the classic game mode
-// or by creating a new custom game and then clicking "save settings" button. 
+// or (TO DO) by creating a new custom game and then clicking "save settings" button. 
 
-import React, { useContext, useEffect, useState, useRef } from "react"
-//import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
-//import { useParams } from "react-router-dom"
+import React, { useContext, useEffect, useState} from "react";
 import { useHistory } from 'react-router-dom';
-import { CardContext } from "../card/CardProvider.js"
-import { CardHTML } from "../card/Card.js"
-import { ClassicGameResultsContext } from "./ClassicGameProvider.js"
-import { AccusationHTML } from "./functions/accusation.js"
-import { setup } from "./functions/setup.js"
-import { getScore } from "./functions/score.js"
+import { CardContext } from "../card/CardProvider.js";
+import { CardHTML } from "../card/Card.js";
+import { ClassicGameResultsContext } from "./ClassicGameProvider.js";
+import { getScore } from "./functions/score.js";
 import Modal from 'react-modal';
-import "./Game.css"
+import "./Game.css";
 
 
 export const GameBoard = (props) => {
@@ -21,8 +17,6 @@ export const GameBoard = (props) => {
     const { cards, getCardsByGameId, getCardsByGameIdAndType } = useContext(CardContext)
     const { getBestResultsByUserId, updateBestResults, addBestResults} = useContext(ClassicGameResultsContext)
 
-    //const [currentGame, setCurrentGame] = useState({})
-    //const [gameResults, setGameResults] = useState() // used to set the game results at the end of a game
     const activeUserId = sessionStorage.getItem("activeUser");
     const history = useHistory();
     
@@ -42,7 +36,7 @@ export const GameBoard = (props) => {
     const [allRooms, setAllRooms] = useState([])
 
 
-    // object which will store the three arrays of card types for a classic game
+    // object which will store the three cards that make up an accusation
     const [accusedCards, setAccusedCards] = useState({
         accusedChar: "",
         accusedWeapon: "",
@@ -52,19 +46,24 @@ export const GameBoard = (props) => {
     // object which will store the three cards of information about the culprit
     const [culprit, setCulprit] = useState({})
 
+    // Boolean to be watched by the end-game useEffect
     const [gameOver, setGameOver] = useState(false)
 
     const [numPlayers, setNumPlayers] = useState(0) // set via a prompt in the 2nd useEffect
 
-    const [playerList, setPlayerList] = useState([])
+    const [playerList, setPlayerList] = useState([]) // will hold each player object and each player's respective hand
 
-    const [gameTimer, setGameTimer] = useState(0) // initial timer state
+    // initial timer state
+    const [gameTimer, setGameTimer] = useState(0)
+
 
     const [gameScore, setGameScore] = useState(0)
 
     const [modalIsOpen, setIsOpen] = useState(false)
 
-    var subtitle;
+    let subtitle;
+
+    const [newHighScoreMsg, setNewHighScoreMsg] = useState("")
 
     //const startTime = useRef(null);
     //const stopTime = useRef(null);
@@ -90,15 +89,19 @@ export const GameBoard = (props) => {
         score: null
     })
 
-    // ----------------------------------------------------
+    // ----------------------- useEffects -----------------------------
 
+    // ---- initial grabbing of game cards useEffect ----
     useEffect(() => {
-        if(flag === false){
-            console.log("flag: ", flag)
+        if(flag === false){ 
+            // this useEffect is only executed once
+            //console.log("flag: ", flag)
             getCardsByGameId(0)
             // User is going to play a classic game, 
             // create new object to hold the game results
             // fetch the classic game cards
+
+            // These will hold the cards to be displayed and narrowed down during a game
             getCardsByGameIdAndType(0, "character") // sets the 'cards' variable with cards with gameId = 0
             .then(setCharCardArr)
 
@@ -112,28 +115,31 @@ export const GameBoard = (props) => {
         }   
     }, [])
 
+    // ---- number of players prompt useEffect ----
     useEffect(() => {
         var numberOfPlayers = prompt("How many people are playing? (2 - 6)", "2");
-        console.log("number of players? : ", numberOfPlayers);
+        //console.log("number of players? : ", numberOfPlayers);
         setNumPlayers(numberOfPlayers);
         setStartTime(performance.now())
     }, [])
 
-
+    // ---- timer initiation useEffect ----
     useEffect(() => {
         if(numPlayers > 0){
-            console.log("numPlayers: ", numPlayers)
+            //console.log("numPlayers: ", numPlayers)
             timerToggle(true)
         }
     }, [numPlayers])
 
 
-    // SO UNNECESSARY .... 
-
+    //  ---- card duplication useEffect ----
     useEffect(() => {
         if(flag === true){
-            console.log("flag: ", flag)
-            getCardsByGameIdAndType(0, "character") // sets the 'cards' variable with cards with gameId = 0
+            // once the flag status changes, this useEffect runs, also only once. 
+            //console.log("flag: ", flag)
+
+            // These will hold the card options which remain unchanged while accusing cards
+            getCardsByGameIdAndType(0, "character") 
             .then(setAllCharacters)
 
             getCardsByGameIdAndType(0, "weapon")
@@ -144,6 +150,8 @@ export const GameBoard = (props) => {
         }
     }, [flag])
 
+
+    // ---- culprit creation useEffect ----
     useEffect(() => {
         if(!culprit){
             //console.log("culprit should not exist: ", culprit)
@@ -164,14 +172,11 @@ export const GameBoard = (props) => {
     }, [allCharacters, allWeapons, allRooms])
 
 
+    // ---- end-game useEffect ----
     // when game is finished, check results and upload new high score if necessary
     useEffect(() => {
-        console.log("useEffect -- gameOver: ", gameOver);
-        //console.log("useEffect -- gameOver: ", gameOver);
         if(gameOver === true) {
-            console.log("gameOver is TRUE")
             if(game.score !== null){
-                console.log("game.score is NOT null")
                 // game is over, check if active user's current bestGameResult score is higher or lower than current game score
 
                 getBestResultsByUserId(activeUserId)
@@ -179,11 +184,10 @@ export const GameBoard = (props) => {
                     compareGameResults(result, game)
                 })
             }
-
         }
     }, [game, gameOver])
 
-
+    // ----------------------------------------------------------------------
 
 
     // Handle the form inputs
@@ -200,156 +204,37 @@ export const GameBoard = (props) => {
 
 
     const compareGameResults = (existingResults, currentResults) => {
-        console.log("existingResults: ", existingResults)
-        console.log("currentResults: ", currentResults)
+        //console.log("existingResults: ", existingResults)
+        //console.log("currentResults: ", currentResults)
         // existingResults is an object inside a one-element array, access obj with [0]
         // both parameters are objects, so access score with .score
     
         // does the existing game exist?
         if(existingResults[0]){
             // then the existing results must include a score to compare
-            console.log("existingResults score: ", Number(existingResults[0].score))
-            console.log("currentResults score: ", currentResults.score)
+            //console.log("existingResults score: ", Number(existingResults[0].score))
+            //console.log("currentResults score: ", currentResults.score)
 
             if(currentResults.score >= Number(existingResults[0].score)){
                 // if the current score is as high or higher than the existing score, update the user's best Classic game results
-                console.log("New high score: ", currentResults.score)
+                //console.log("New high score: ", currentResults.score)
+                setNewHighScoreMsg("New High Score: " + currentResults.score)
                 updateBestResults(existingResults[0].id, currentResults)
-
             }
             else{
-                console.log("High score: ", Number(existingResults[0].score))
+                //console.log("High score: ", Number(existingResults[0].score))
+                setNewHighScoreMsg("High Score: " + Number(existingResults[0].score)) 
             }
-
         }
         else{
             // existing score does not exist, so just add currentResults to database
-            console.log("User's first game results!")
+            //console.log("User's first game results!")
+            setNewHighScoreMsg("New High Score: " + currentResults.score)
             addBestResults(currentResults)
             
         }
     }
 
-
-    // ----------------------- Accusation Section ------------------------
-/*
-    const makeAccusation = ( playerlist_withCards) => { 
-
-        // let allCharacters = charCards;
-        // let allWeapons = weaponCards;
-        // let allRooms = roomCards; 
-        let accuseArray = [accusedCards.accusedChar, accusedCards.accusedWeapon, accusedCards.accusedRoom]
-    
-
-        // tryWin sets gameOver so the accusing whileloop can halt. 
-        // tryWin also returns the final, non-disproved accusation 
-        const tryWin = (accuseArr) => {
-            setGameOver(true)
-            return accuseArr;
-        };
-    
-        // errMsg returns an array of three zeros after checking all player's hands 
-        // and the accusation is disproven
-        const errMsg = () => {             
-            console.log("Accusation Disproved. Go Again.");
-            setGameOver(false)
-            return [0,0,0];
-        }; 
-    
-        // Local scope variables. 
-        var suspicion = {
-            selfDisproved: false,       // if cards in the accuser's hand can disproce accusation, set to true
-            disproved: false            // if cards in another player's hand can disprove accusation, set to true 
-        };
-        // a tracks the number player which is currently being checked to potentially disprove the accusation
-        var a = 0;
-        
-        console.log(playerlist_withCards[a].name + " accuses "+ accuseArray[0]+" with the "+accuseArray[1]+" in the "+accuseArray[2]+"!");
-
-
-        // Check against the accuser's own cards first. 
-        // If any of the accused items are in the accuser's hand, suspicion.selfDisproved is set to true.
-        // However, the item disproved is not removed from its accusable array.
-        // This resembles the ability to accuse anything in your hand at any time to find out
-        // the specific cards of other players. 
-        for(var u = 0; u < 3; u++){
-            if(suspicion.selfDisproved === true){
-                break;
-            }
-            else{
-                for(var h = 0; h < playerlist_withCards[a].cards.length; h++){
-                    if(accuseArray[u] === playerlist_withCards[a].cards[h]){
-                        console.log("Accuser can disprove " + accuseArray[u]);
-                        suspicion.selfDisproved = true;
-                        break;
-                    }
-                    else{
-                        suspicion.selfDisproved = false;
-                    }
-                }
-            }
-        }   
- 
-        a = a + 1;                              // add 1 to a to start checking next player
-        while(suspicion.disproved === false){       
-            // loop needs to stop once all players have been checked or if  
-            // accusation is disproven 
-            if(a > playerlist_withCards.length - 1){ 
-                // if tracker variable a is higher than the number of players - 1, all players checked, exit loop
-                console.log("all players checked");             
-                break;
-            }
-            else{
-                // check accusation against the next player's hand
-                suspicion.disproved = checkAccusation(accusedCards, playerlist_withCards[a]); 
-                a++;
-            }
-        }
-        console.log(suspicion);    // let accuser know if they disproved the accusation and/or if anyone else did.
-    
-        // if the accuser can't disprove, and neither can the other players,
-        // the accusation must be correct. 
-        if((suspicion.selfDisproved === false && suspicion.disproved === false)){
-            console.log("accusation not disproven by accuser or by other players.");
-            return tryWin(accusedCards);
-        }
-        else{
-            return errMsg();
-        }
-    };
-
-    // the checkAccusation function compares the accusation array to the cards
-    // in the next player's hand. If any of the accused items are in the player's hand,
-    // the item is showed to the player making the accusation, and the item is removed from 
-    // whichever accusable array it belongs to. 
-
-    // current checking order: 1. characters, 2. weapons, 3. rooms. 
-    const checkAccusation = (charCards, weaponCards, roomCards, accuseArr, player) => {    
-        //var continueCheck = prompt("started checkAccusation function against " + player.name + ". proceed?  Y/N");
-        if(player.cards.includes(accuseArr[0])){                            // check for characters first
-            console.log(player.name + " can disprove "+ accuseArr[0]);
-            charCards.splice(charCards.indexOf(accuseArr[0]),1);    // remove from suspectarray if disproved
-            setCharCardArr(charCards); // update visible cards
-            return true;
-        }
-        else if(player.cards.includes(accuseArr[1])){                       // check for weapons second
-            console.log(player.name + " can disprove " + accuseArr[1]);
-            weaponCards.splice(weaponCards.indexOf(accuseArr[1]),1);  // remove from suspectarray if disproved
-            setWeaponCardArr(weaponCards); // update visible cards
-            return true;
-        }
-        else if(player.cards.includes(accuseArr[2])){                       // check for rooms third
-            console.log(player.name + " can disprove "+ accuseArr[2]);
-            roomCards.splice(roomCards.indexOf(accuseArr[2]),1);      // remove from suspectarray if disproved
-            setRoomCardArr(roomCards); // update visible cards
-            return true;
-        }
-        else{
-            console.log(player.name + " could not disprove");
-            return false;
-        }
-    };
-*/
 
     // returns the current time in milliseconds since program began running
     async function getCurrentMillis() {
@@ -375,11 +260,6 @@ export const GameBoard = (props) => {
             return 0 
         }
     }
-
-
-
-
-
 
     // check final accusation against contents of confidential folder
     const finish = () => {
@@ -420,38 +300,19 @@ export const GameBoard = (props) => {
                 }
                 // if accused room is not the culprit, but still visible on the left, remove it
                 else {
-                    //console.log("Did not match rooms");
-                    //console.log("roomCards: ", roomCards);
-                    //console.log("accusedRoom: ", accusedCards.accusedRoom);
                     const newRooms = roomCards.filter(card => card.name !== accusedCards.accusedRoom)
-                    //console.log("newRooms: ", newRooms);
-                        //console.log(accusedCards.accusedRoom, " -- DISPROVED");
-                        //roomCards.splice(roomCards.indexOf(accusedCards.accusedRoom),1);    // remove from suspectarray if disproved
                     setRoomCardArr(newRooms); // update visible cards
                 }
             }
             // if accused weapon is not the culprit, but still visible on the left, remove it
             else { 
-                //console.log("Did not match weapons");
-                //console.log("weaponCards: ", weaponCards);
-                //console.log("accusedWeapon: ", accusedCards.accusedWeapon);
                 const newWeapons = weaponCards.filter(card => card.name !== accusedCards.accusedWeapon)
-                //console.log("newWeapons: ", newWeapons);
-                    //console.log(accusedCards.accusedRoom, " -- DISPROVED");
-                    //roomCards.splice(roomCards.indexOf(accusedCards.accusedRoom),1);    // remove from suspectarray if disproved
                 setWeaponCardArr(newWeapons); // update visible cards
             }
-
         }
         // if accused character is not the culprit, but still visible on the left, remove it
         else {
-            //console.log("Did not match characters");
-            //console.log("characterCards: ", charCards);
-            //console.log("accusedChar: ", accusedCards.accusedChar);
             const newChars = charCards.filter(card => card.name !== accusedCards.accusedChar)
-            //console.log("newChars: ", newChars);
-                //console.log(accusedCards.accusedRoom, " -- DISPROVED");
-                //roomCards.splice(roomCards.indexOf(accusedCards.accusedRoom),1);    // remove from suspectarray if disproved
             setCharCardArr(newChars); // update visible cards
         }
     };
@@ -459,44 +320,7 @@ export const GameBoard = (props) => {
     // ------------------------------------------------------------------------- 
 
 
-    //const isNewBestScore
 
-
-
-    // ------------------------- Play Game Section -----------------------------
-/*
-    const play = (gameObj, playerList, gameOver, accusationResult ) => {
-        var t0 = performance.now();
-        while(gameOver === false){
-            console.log("Make a new accusation...");
-            console.log("Accuser's hand: " + playerList[0].cards); // show accuser their hand to help with accusing
-            accusationResult = makeAccusation(playerList); // returns correct accuseArray or [0,0,0].
-        }
-    
-        finish(accusationResult, playerList[0]);
-        var t1 = performance.now();         // records how many milliseconds passed after t0 was defined. 
-        const tTotalSeconds = (t1 - t0) / 1000;   // convert to seconds
-    
-        gameObj.characters = charCardArr;
-        gameObj.weapons = weaponCardArr;
-        gameObj.rooms = roomCardArr;
-        gameObj.players = playerList;
-    
-        gameObj.accusables.push(accusablePeople);
-        gameObj.accusables.push(accusableWeapons);
-        gameObj.accusables.push(accusableRooms);
-    
-        gameObj.completionTime = String(tTotalSeconds.toFixed(2)) + " seconds";    // add completionTime to gameObj data
-        console.log("Game Over. " + playerList[0].name + " solved the case in " + (tTotalSeconds/60).toFixed(2) + " minutes ("+ tTotalSeconds.toFixed(2) +" seconds)!");
-        const winnerScore = getScore(tTotalSeconds);
-        gameObj.score = String(winnerScore) + " points";                           // add score to gameObj data
-        //gameObj; // should display gameObj info at the end of each gameObj
-    
-        console.log("Last Game Stats:");
-        console.log(gameObj); // will definitely display gameObj info 
-    };
-
-*/
     // ---------------- Timer -----------------
     // some simple timer start and stop functions I found
 
@@ -542,15 +366,6 @@ export const GameBoard = (props) => {
             
     }
 
-    // const renderCulpritDebug = () => {
-    //    return <section className="envelopeDebug" >
-    //             <p>${`Who: ${culprit.who}`}</p>
-    //             <p>${`What: ${culprit.what}`}</p>
-    //             <p>${`Where: ${culprit.where}`}</p>
-    //         </section>
-       
-    // }
-
     const renderScore = (inputTime) => {
         const contentTarget = document.querySelector(".scoreArea");
         const myScore = getScore(charCardArr, weaponCardArr, roomCardArr, inputTime, numPlayers);
@@ -568,6 +383,7 @@ export const GameBoard = (props) => {
             score: myScore
         })
         contentTarget.innerHTML = `
+            <h3>Stats</h3>
             <section className="myScore" >
                 <p><strong>Players:</strong> ${numPlayers}</p>
                 <p><strong>Completion Time:</strong> ${(Number(inputTime)/1000).toFixed(2)} seconds</p>
@@ -584,12 +400,6 @@ export const GameBoard = (props) => {
     
 
     const createCharDropdown = (cardArray) => {
-        //console.log("cardArray - createCharDropdown: ", cardArray);
-        // const characters = cardArray.filter(card => {
-        //     return card.type === "character"
-        // })
-        //console.log("characters: ", characters);
-        //setAllCharacters(characters)
         return (
             <select id="characterSelect" name="accusedChar" className="cardSelector-dropdown" onChange={handleControlledAccuseSelectChange}>
                 <option value="0">Character</option>
@@ -604,11 +414,6 @@ export const GameBoard = (props) => {
     }
 
     const createWeaponDropdown = (cardArray) => {
-        // const weapons = cardArray.filter(card => {
-        //     return card.type === "weapon"
-        // })
-        //console.log("cardArray - createWeaponDropdown: ", cardArray);
-        //setAllWeapons(weapons)
         return (
             <select id="weaponSelect" name="accusedWeapon" className="cardSelector-dropdown" onChange={handleControlledAccuseSelectChange}>
                 <option value="0">Weapon</option>
@@ -623,11 +428,6 @@ export const GameBoard = (props) => {
     }
 
     const createRoomDropdown = (cardArray) => {
-        // const rooms = cardArray.filter(card => {
-        //     return card.type === "room"
-        // })
-        //console.log("cardArray - createRoomDropdown: ", cardArray);
-        //setAllRooms(rooms)
         return (
 
             <select id="roomSelect" name="accusedRoom" className="cardSelector-dropdown" onChange={handleControlledAccuseSelectChange}>
@@ -672,16 +472,8 @@ export const GameBoard = (props) => {
     }
 
     const PostGameModal = (HTMLTarget) => {
-        const customStyles = {
-            content : {
-                top                   : '50%',
-                left                  : '50%',
-                right                 : 'auto',
-                bottom                : 'auto',
-                marginRight           : '-50%',
-                transform             : 'translate(-50%, -50%)'
-            }
-        };
+        
+       
         
         Modal.setAppElement(HTMLTarget)
     
@@ -708,6 +500,9 @@ export const GameBoard = (props) => {
                             </div>
                             <div className="scoreArea">
                             </div>
+                        </div>
+                        <div className="newHighScore">
+                            <h1>{newHighScoreMsg}</h1>
                         </div>
                     </div>
 
@@ -772,9 +567,6 @@ export const GameBoard = (props) => {
                             </div>
                     </section>
                 </div>
-                {/* <div className="confidentialDebug">
-                    {renderCulpritDebug()}
-                </div> */}
             </section>
         </>
     )

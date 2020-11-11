@@ -7,7 +7,7 @@ export const getScore = (accusablePeople, accusableWeapons, accusableRooms, time
 
     let completionTime = Number(time) / 1000;
     completionTime.toFixed(2);
-    var score = 0;
+    let score = 0;
     // add 10 points for every item not disproven:
     score += 10 * accusablePeople.length;
     console.log("accusablePeople remaining: "+accusablePeople.length+", +"+(10*accusablePeople.length));

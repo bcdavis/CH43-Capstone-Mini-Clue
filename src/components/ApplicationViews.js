@@ -17,9 +17,9 @@ export const ApplicationViews = (props) => {
     return (
         <>  
             <ClassicGameResultsProvider>
-                <Route exact path="/">
-                    <Home />
-                </Route>
+            <Route exact path="/">
+                <Home />
+            </Route>
             </ClassicGameResultsProvider>
             
             <CardProvider>
