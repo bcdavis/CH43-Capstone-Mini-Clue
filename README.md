@@ -3,7 +3,7 @@
 
 Clone this repository into a new directory in your workspace.
 
-Navigate into the cloned directory and make a new direcroty called `api` by running `mkdir api`
+Navigate into the cloned directory and make a new directory called `api` by running `mkdir api`
 
 Navigate into the new `api` directory and run `touch database.json`
 
