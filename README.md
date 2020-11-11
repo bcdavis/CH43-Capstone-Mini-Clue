@@ -296,9 +296,10 @@ To run the app, in a new terminal window, navigate into the `src` directory and 
 
 When playing a game, if the user clicks either the "Home" or "How to Play" button in the nav bar, the page breaks due to the timer trying to update a DOM element that no longer exists. If you want to navigate away from the gameboard page, make sure to perform a page reload to reset the new page. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
 
