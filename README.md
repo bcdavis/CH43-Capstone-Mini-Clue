@@ -1,3 +1,8 @@
+## Mini Clue
+
+The game of Clue is played by two to six players attempting to individually figure out which one of the game's characters committed a murder with a particular weapon in a particular room before anyone else.
+
+In this version of Clue, the only sentient player is the user. Games consist of one player constantly making accusatory guesses in an attempt to narrow down the culprit and can last as short as a minute (or less). Any other players specified cannot play against the user... yet.
 
 ## Run This Program
 
